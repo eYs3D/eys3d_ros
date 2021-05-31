@@ -1,0 +1,4 @@
+#ifndef LIB_ETRONDI_VERSION_H
+#define LIB_ETRONDI_VERSION_H
+#define ETRONDI_VERSION "8aad961"
+#endif
