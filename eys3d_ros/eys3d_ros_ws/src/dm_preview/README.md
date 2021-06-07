@@ -9,6 +9,8 @@ eYs3D dm_preview is a package for eYs3D Depth camera module.
 * Support Linux x64 & ARM aarch64
 * Tested on X86 PC and NVIDIA Jetson TX2, with Ubuntu 18.04 (GCC 7.5).  
 * Currently only YX8062 camera module supports IMU function.  
+* Supports ROS Melodic on Ubuntu 18.04  
+* Supports ROS 1.0  
 
 ----------
 
