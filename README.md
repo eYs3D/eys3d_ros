@@ -37,11 +37,15 @@ Install [ROS Melodic][1] on Ubuntu 18.04
 ## Usage Instructions
 
  - **Start the eYs3D depth camera node**
- 1. After sourcing your setup bash using:  
+ 1. Build any packages located in eys3d_ros/eys3d_ros_ws/src:
+ 
+    `cd eys3d_ros/eys3d_ros_ws; catkin_make; cd ..`
+ 
+ 2. After sourcing your setup bash using:  
 
     `source ../eys3d_ros/eys3d_ros_ws/devel/setup.bash`
 
- 2. Create terminal and type below command:  
+ 3. Create terminal and type below command:  
 
     `roslaunch dm_preview display.launch`  
         
