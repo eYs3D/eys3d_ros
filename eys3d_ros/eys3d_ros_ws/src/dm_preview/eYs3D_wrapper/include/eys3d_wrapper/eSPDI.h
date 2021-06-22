@@ -900,6 +900,37 @@ int  EtronDI_GetColorImage(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo,
                         BYTE *pBuf, unsigned long int *pImageSize,
                         int *pSerial = 0, int nDepthDataType =0);
 
+
+/*! \fn int EtronDI_GetColorImageWithTimestamp(
+        void *pHandleEtronDI,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *pBuf,
+        unsigned long int *pImageSize,
+        int *pSerial, int nDepthDataType,
+        int64_t *pcur_tv_sec,
+        int64_t *pcur_tv_usec)
+    \brief get color image
+        by issuing V4L2's IOCTL to get frame data
+    \param void *pHandleEtronDI	CEtronDI handler
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param BYTE *pBuf	buffer to store image data
+    \param unsigned long int *pImageSize	the actual buffer size getting from device
+    \param int *pSerial	the serial number for synchronizing color and depth image
+    \param int nDepthDataType reserved, no used.
+    \param int64_t *pcur_tv_sec seconds in 'v4l2_buffer' timestamp of this image data
+    \param int64_t *pcur_tv_usec microseconds in 'v4l2_buffer' timestamp of this image data
+    \return success: EtronDI_OK, others: see eSPDI_def.h
+*/
+int EtronDI_GetColorImageWithTimestamp(
+    void *pHandleEtronDI,
+    PDEVSELINFO pDevSelInfo,
+    BYTE *pBuf,
+    unsigned long int *pImageSize,
+    int *pSerial,
+    int nDepthDataType,
+    int64_t *pcur_tv_sec,
+    int64_t *pcur_tv_usec);
+
 /*! \fn int EtronDI_GetDepthImage(
         void *pHandleEtronDI,
         PDEVSELINFO pDevSelInfo,
@@ -920,6 +951,35 @@ int  EtronDI_GetDepthImage(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo,
                         BYTE *pBuf, unsigned long int *pImageSize,
                         int *pSerial = 0, int nDepthDataType =0);
 
+/*! \fn int EtronDI_GetDepthImageWithTimestamp(
+        void *pHandleEtronDI,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *pBuf,
+        unsigned long int *pImageSize,
+        int *pSerial, int nDepthDataType,
+        int64_t *pcur_tv_sec,
+        int64_t *pcur_tv_usec)
+    \brief get color image
+        by issuing V4L2's IOCTL to get frame data
+    \param void *pHandleEtronDI	CEtronDI handler
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param BYTE *pBuf	buffer to store image data
+    \param unsigned long int *pImageSize	the actual buffer size getting from device
+    \param int *pSerial	the serial number for synchronizing color and depth image
+    \param int nDepthDataType reserved, no used.
+    \param int64_t *pcur_tv_sec seconds in 'v4l2_buffer' timestamp of this image data
+    \param int64_t *pcur_tv_usec microseconds in 'v4l2_buffer' timestamp of this image data
+    \return success: EtronDI_OK, others: see eSPDI_def.h
+*/
+int EtronDI_GetDepthImageWithTimestamp(
+    void *pHandleEtronDI,
+    PDEVSELINFO pDevSelInfo,
+    BYTE *pBuf,
+    unsigned long int *pImageSize,
+    int *pSerial,
+    int nDepthDataType,
+    int64_t *pcur_tv_sec,
+    int64_t *pcur_tv_usec);
 
 /*! \fn int EtronDI_SetupBlock(
         void *pHandleEtronDI,

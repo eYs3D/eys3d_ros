@@ -359,6 +359,8 @@ public:
     std::shared_ptr<FrameSetPipeline> mFrameSetPipeline;
     
     bool mPlyFilterEnabled;
+
+    bool mIsScallarDown = false;
     
     std::unique_ptr<libeYs3D::video::FrameProducer> mColorFrameProducer;
     std::unique_ptr<libeYs3D::video::FrameProducer> mDepthFrameProducer;
