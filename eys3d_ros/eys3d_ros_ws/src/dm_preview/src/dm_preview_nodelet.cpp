@@ -282,9 +282,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     while (nh_ns.ok()) {
       loop_rate.sleep();
     }
-    //s:Dynamic Reconfigure
-    dynamic_reconfig_thread.join();
-    //e:Dynamic Reconfigure
+
   }
 
   void getLanuchParams() {
