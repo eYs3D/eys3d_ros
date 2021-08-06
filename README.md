@@ -78,7 +78,12 @@ Install [ROS Melodic][1] on Ubuntu 18.04
     /dm_preview/imu/data_raw  
     
     /dm_preview/imu/data_raw_processed  
-
+    
+----------
+## Test RGB-D Handheld Mapping for rtabmap_ros package (Optional)  
+- For more information, demos and tutorials about this package, visit [rtabmap_ros](http://wiki.ros.org/rtabmap_ros) page on ROS wiki.
+- Install rtabmap_ros:  
+    `sudo apt install ros-melodic-rtabmap-ros`  
 ----------
 
  ## License
