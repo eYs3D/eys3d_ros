@@ -52,7 +52,7 @@
   <include file="$(find dm_preview)/launch/dm_preview.launch">
     <arg name="module_name" value="$(arg camera4)" />
     <arg name="tf_prefix" value="$(arg tf_prefix4)" />
-    <arg name="kernel_name" value="1-13.2:1.0" />
+    <arg name="dev_serial_number" value="00000001" />
     <arg name="color_width" value="640" />
     <arg name="color_height" value="400" />
     <arg name="depth_width" value="640" />
