@@ -1,6 +1,6 @@
 <library path="lib/libdm_preview">
   <class name="dm_preview/DMPreviewNodelet"
-         type="DMPreviewNodelet"
+         type="eys3d_depth::DMPreviewNodelet"
          base_class_type="nodelet::Nodelet">
     <description>This is the nodelet of ROS interface for eYs3D depth camera module.</description>
   </class>

@@ -1,19 +1,19 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 0
+    Help Height: 135
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
         - /Status1
-        - /8036 Color1
-        - /8036 Depth1
-        - /8059 Color1
-        - /8059 Depth1
-        - /Hypatia_Color1
-        - /Hypatia_Depth1
+        - /Left Image1
+        - /Right Image1
+        - /Right Image1/Right Color1
+        - /Points1
+        - /Marker1
+        - /Imu1
       Splitter Ratio: 0.5
-    Tree Height: 202
+    Tree Height: 370
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -32,7 +32,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: 8036 Color
+    SyncSource: Left Color
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -58,54 +58,6 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/8036123456/left/image_color
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: 8036 Color
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/8036123456/depth/image_raw
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: 8036 Depth
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/8059123456/left/image_color
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: 8059 Color
-      Normalize Range: true
-      Queue Size: 1
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/8059123456/depth/image_raw
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: 8059 Depth
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
     - Class: rviz/Axes
       Enabled: false
       Length: 1
@@ -113,6 +65,74 @@ Visualization Manager:
       Radius: 0.10000000149011612
       Reference Frame: <Fixed Frame>
       Value: false
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Image
+          Enabled: true
+          Image Topic: /dm_preview/left/image_color
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: Left Color
+          Normalize Range: true
+          Queue Size: 1
+          Transport Hint: raw
+          Unreliable: false
+          Value: true
+        - Class: rviz/Image
+          Enabled: false
+          Image Topic: /dm_preview/left/image_mono
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: Left Mono
+          Normalize Range: true
+          Queue Size: 1
+          Transport Hint: raw
+          Unreliable: false
+          Value: false
+      Enabled: true
+      Name: Left Image
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Image
+          Enabled: true
+          Image Topic: /dm_preview/right/image_color
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: Right Color
+          Normalize Range: true
+          Queue Size: 1
+          Transport Hint: raw
+          Unreliable: false
+          Value: true
+        - Class: rviz/Image
+          Enabled: false
+          Image Topic: /dm_preview/right/image_mono
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: Right Mono
+          Normalize Range: true
+          Queue Size: 1
+          Transport Hint: raw
+          Unreliable: false
+          Value: false
+      Enabled: true
+      Name: Right Image
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /dm_preview/depth/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Depth Image
+      Normalize Range: true
+      Queue Size: 1
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -136,13 +156,21 @@ Visualization Manager:
       Queue Size: 1
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.003000000026077032
+      Size (m): 0.009999999776482582
       Style: Flat Squares
       Topic: /dm_preview/points/data_raw
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /camera_mesh
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
     - Alpha: 1
       Class: rviz_plugin_tutorials/Imu
       Color: 204; 51; 204
@@ -152,35 +180,11 @@ Visualization Manager:
       Topic: /dm_preview/imu/data_raw
       Unreliable: false
       Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/1_13_2_1_0/left/image_color
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Hypatia_Color
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
-    - Class: rviz/Image
-      Enabled: true
-      Image Topic: /dm_preview/1_13_2_1_0/depth/image_raw
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Hypatia_Depth
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: dm_base_frame
+    Fixed Frame: dm_preview_link_frame
     Frame Rate: 30
   Name: root
   Tools:
@@ -211,38 +215,36 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.0
+        Y: 0.0
+        Z: 0.0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.10539857298135757
+      Pitch: 0.6803985238075256
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.825394630432129
+      Yaw: 2.7103943824768066
     Saved: ~
 Window Geometry:
-  8036 Color:
-    collapsed: false
-  8036 Depth:
-    collapsed: false
-  8059 Color:
-    collapsed: false
-  8059 Depth:
+  Depth Image:
     collapsed: false
   Displays:
     collapsed: false
-  Height: 759
+  Height: 1025
   Hide Left Dock: false
   Hide Right Dock: false
-  Hypatia_Color:
+  Left Color:
     collapsed: false
-  Hypatia_Depth:
+  Left Mono:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000002480000025bfc020000000bfb000000100044006900730070006c006100790073010000003e00000108000000ca00fffffffb00000014003800300033003600200043006f006c006f0072010000014c0000009e0000001600fffffffb00000014003800300033003600200044006500700074006801000001f0000000a90000001600fffffffb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb00000014004c00650066007400200043006f006c006f007201000001670000012e000000000000000000000001000002310000025bfc020000000afb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003e000000a6000000a600fffffffb00000014003800300035003900200043006f006c006f0072010000003e000000a10000001600fffffffb00000014003800300035003900200044006500700074006801000000e5000000b30000001600fffffffb0000001a0048007900700061007400690061005f0043006f006c006f0072010000019e0000007e0000001600fffffffb0000001a0048007900700061007400690061005f004400650070007400680100000222000000770000001600fffffffb000000160052006900670068007400200043006f006c006f007201000001cb000000ca0000000000000000fb00000012004c0065006600740020004d006f006e006f00000001ff000000c70000000000000000fb00000014005200690067006800740020004d006f006e006f00000001ff000000c70000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000056d0000003afc0100000002fb0000000800540069006d006501000000000000056d0000026200fffffffb0000000800540069006d00650100000000000004500000000000000000000000e80000025b00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001bd00000363fc0200000009fb000000100044006900730070006c006100790073010000003d00000236000000c900fffffffb00000014004c00650066007400200043006f006c006f00720100000279000001270000001600fffffffb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c0000026100000001000001c200000363fc0200000007fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d00000107000000a400fffffffb000000160044006500700074006800200049006d006100670065010000014a000001290000001600fffffffb000000160052006900670068007400200043006f006c006f00720100000279000001270000001600fffffffb00000012004c0065006600740020004d006f006e006f00000001ff000000c70000001600fffffffb00000014005200690067006800740020004d006f006e006f00000001ff000000c70000001600fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000074f0000003efc0100000002fb0000000800540069006d006501000000000000074f000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000003c40000036300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Right Color:
+    collapsed: false
+  Right Mono:
+    collapsed: false
   Selection:
     collapsed: false
   Time:
@@ -251,6 +253,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1389
-  X: 393
-  Y: 60
+  Width: 1871
+  X: 49
+  Y: 27

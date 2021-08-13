@@ -92,7 +92,7 @@ get_filename_component(SDK_DIR "${PROJECT_SOURCE_DIR}/../../.." ABSOLUTE)
 #endif()
 #remove above -
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.2.0 REQUIRED)
 if(OpenCV_FOUND)
   message(STATUS "OpenCV is found.")
   set(WITH_OPENCV TRUE)
@@ -142,10 +142,13 @@ catkin_package(
 ## Build ##
 ###########
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+find_package(DBus REQUIRED)
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 
-set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/eys3d_wrapper")
+set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D/include/")
 message("eys3d_depth_INCLUDE_DIRS= ${eys3d_depth_INCLUDE_DIRS}")
 
 include_directories(
@@ -153,18 +156,21 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
   ${eys3d_depth_INCLUDE_DIRS}
+  ${DBUS_INCLUDE_DIRS}
 )
-set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/libeYs3D_wrapper.so")
+set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D/lib/libeys3d_depth.so")
 
 set(LINK_LIBRARIES
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
   ${eys3d_depth_LIB} #eys3d_depth
+  ${DBUS_LIBRARIES}
 )
 
 ## Declare a C++ library
 add_library(dm_preview
    src/dm_preview_nodelet.cpp
+   src/pointcloud_generator.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -202,20 +208,14 @@ target_link_libraries(dm_preview_listener ${LINK_LIBRARIES})
 add_executable(dm_preview_imu_listener src/imu_listener.cpp)
 target_link_libraries(dm_preview_imu_listener ${LINK_LIBRARIES})
 
-
 add_custom_command(TARGET dm_preview POST_BUILD 
     COMMAND 
-    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/*.* ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
+    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/DM_Quality_Cfg ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/dm_preview/
     )
 
 add_custom_command(TARGET dm_preview POST_BUILD 
-  COMMAND 
-  cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/eSPDI ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
-  )
-
-add_custom_command(TARGET dm_preview POST_BUILD 
-COMMAND 
-cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_config/cfg ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../
+    COMMAND 
+    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D/lib/eYs3D/*.* ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
     )
 
 #############
