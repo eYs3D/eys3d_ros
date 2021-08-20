@@ -24,7 +24,12 @@ API reference and the guide documentations.
 
 The following instructions are written for ROS Melodic on Ubuntu 18.04  
 
-Install [ROS Melodic][1] on Ubuntu 18.04  
+- Install [ROS Melodic][1] on Ubuntu 18.04  
+- Install the dependency packages    
+
+    `sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-dev libusb-dev`  
+
+    `sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev libjpeg9` 
 
 ----------
 
