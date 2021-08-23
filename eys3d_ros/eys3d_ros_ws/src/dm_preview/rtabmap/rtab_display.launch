@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Stream format -->
+  <arg name="stream_mjpg"       default="0" />
+  <arg name="stream_yuyv"       default="1" />
+  
+  <!-- <arg name="base_frame" value="dm_base_frame" /> -->
+  
+
+  <arg name="camera5" value="8062" />
+  <arg name="tf_prefix5" value="$(arg camera5)" />
+  <include file="$(find dm_preview)/rtabmap/rtab_dm_preview.launch">
+    <arg name="module_name" value="$(arg camera5)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix5)" />
+    <arg name="dev_serial_number" value="80625APA00022" />
+    <arg name="color_width" value="1280" />
+    <arg name="color_height" value="720" />
+    <arg name="depth_width" value="1280" />
+    <arg name="depth_height" value="720" />
+    <arg name="depth_maximum_mm" value="5000" />
+  </include>
+<!--
+  <arg name="camera1" value="8036" />
+  <arg name="tf_prefix1" value="$(arg camera1)" /> 
+  <include file="$(find dm_preview)/rtabmap/rtab_dm_preview.launch">
+    <arg name="module_name" value="$(arg camera1)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix1)" />
+    <arg name="dev_serial_number" value="00000001" />
+    <arg name="color_width" value="1280" />
+    <arg name="color_height" value="720" />
+    <arg name="depth_width" value="1280" />
+    <arg name="depth_height" value="720" />
+    <arg name="depth_maximum_mm" value="5000" />
+  </include>
+ -->
+  <arg name="pi"   value="3.1415926535897932" />
+  <arg name="pi/2" value="1.5707963267948966" />
+  
+  <!--
+  <node pkg="tf" type="static_transform_publisher" name="point_cloud_8036_broadcaster"
+  args="0 0 1 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix1)_points_frame 30" />
+  
+
+  <node pkg="tf" type="static_transform_publisher" name="point_cloud_8062_broadcaster"
+  args="0 0 1 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix5)_points_frame 30" />
+  -->
+
+   <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dm_preview)/rviz/dm_preview.rviz" output="screen"/> -->
+</launch>

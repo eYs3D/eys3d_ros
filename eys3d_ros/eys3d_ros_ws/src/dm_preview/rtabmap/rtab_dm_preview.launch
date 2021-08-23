@@ -1,0 +1,152 @@
+<launch>  
+  <!-- Depth output -->
+  <arg name="depth_raw"         default="0" />
+  <arg name="depth_gray"        default="1" />
+  <arg name="depth_colorful"    default="2" />
+
+  <arg name="color_Left" default="0" />
+  <arg name="color_Left_Right" default="1" />  
+
+  <!-- Stream format -->
+  <arg name="stream_mjpg"       default="0" />
+  <arg name="stream_yuyv"       default="1" />
+
+  <!-- Depth data type -->
+  <arg name="type_color_only"           default="0" />
+  <arg name="type_8_bits"               default="1" />
+  <arg name="type_14_bits"              default="2" />
+  <arg name="type_11_bits"              default="4" />
+
+  <!-- Note: must set DEPTH_RAW to get raw depth values for points -->
+
+  <arg name="dev_serial_number" default="" />
+  <arg name="kernel_name" default="" />
+
+  <arg name="framerate" default="30" />
+  <arg name="color_mode" default="$(arg color_Left)" />
+  <arg name="color_width" default="0" />
+  <arg name="color_height" default="0" />
+  <arg name="color_stream_format" default="$(arg stream_yuyv)" />
+
+  <arg name="depth_width" default="0" />
+  <arg name="depth_height" default="0" />
+  <arg name="depth_type" default="$(arg depth_gray)" />
+  <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+  <arg name="depth_maximum_mm" default="1000" />
+
+  <!-- Auto-exposure -->
+  <arg name="state_ae" default="true" />
+  <!-- Auto-white balance -->
+  <arg name="state_awb" default="true" />
+
+  <!-- Exposure time step [-13, 3] -->
+  <arg name="exposure_time_step" default="-5" />
+  
+  <!-- IR intensity -->
+  <arg name="ir_intensity" default="3" />
+
+  <!-- Points display z distance scale factor -->
+  <arg name="points_factor" default="1000.0" />
+
+  <arg name="module_name" default="dm" />
+
+  <arg name="topic_prefix" default="dm_preview/$(arg module_name)"/>
+  <arg name="dm_preview_prefix" default="$(arg module_name)"/>
+
+  <!-- Node params -->
+  <arg name="dm_preview"       default="dm_preview" />
+  <arg name="base_frame"    default="$(arg dm_preview)_link_frame" />
+  
+  <arg name="tf_prefix" default="(arg dm_preview_prefix)" />
+  <!-- <arg name="base_frame"    default="$(arg tf_prefix)_link_frame" /> -->
+  
+  <arg name="left_color_frame"  default="$(arg tf_prefix)_left_color_frame" />
+  <arg name="right_color_frame" default="$(arg tf_prefix)_right_color_frame" />
+  <arg name="depth_frame"   default="$(arg tf_prefix)_depth_frame" />
+  <arg name="points_frame"  default="$(arg tf_prefix)_points_frame" />
+  <arg name="imu_frame"     default="$(arg tf_prefix)_imu_frame" />
+  <arg name="imu_frame_processed"     default="$(arg tf_prefix)_imu_frame_processed" />
+
+  <!-- left topics -->
+  <arg name="left_color_topic" default="left/image_color" />
+  <!-- right topics -->
+  <arg name="right_color_topic" default="right/image_color" />
+  <!-- depth topic -->
+  <arg name="depth_topic"   default="depth/image_raw" />
+  <!-- points topic -->
+  <arg name="points_topic"  default="points/data_raw" />
+  <!-- imu topic origin -->
+  <arg name="imu_topic"     default="imu/data_raw" />
+  <!-- imu topic processed -->
+  <arg name="imu_processed_topic"     default="imu/data_raw_processed" />    
+
+  <arg name="pi"   value="3.1415926535897932" />
+  <arg name="pi/2" value="1.5707963267948966" />
+  <arg name="optical_rotate" value="0 0 0 -$(arg pi/2) 0 -$(arg pi/2)" />
+  
+  <node pkg="tf" type="static_transform_publisher" name="left_color_broadcaster"
+      args="$(arg optical_rotate) $(arg base_frame) $(arg left_color_frame) 100" />
+
+  <node pkg="tf" type="static_transform_publisher" name="right_color_broadcaster"
+      args="$(arg optical_rotate) $(arg base_frame) $(arg right_color_frame) 100" />
+
+  <node pkg="tf" type="static_transform_publisher" name="depth_broadcaster"
+      args="$(arg optical_rotate) $(arg base_frame) $(arg depth_frame) 100" />
+      
+  <node pkg="tf" type="static_transform_publisher" name="point_cloud_broadcaster"
+      args="$(arg optical_rotate) $(arg base_frame) $(arg points_frame) 100" />
+      
+  <node pkg="tf" type="static_transform_publisher" name="imu_broadcaster"
+      args="0 0 0 $(arg pi/2) 0 $(arg pi) $(arg base_frame) $(arg imu_frame) 50" />
+      
+  <node pkg="tf" type="static_transform_publisher" name="imu_processed_broadcaster"
+      args="0 0 0 $(arg pi/2) 0 $(arg pi) $(arg base_frame) $(arg imu_frame_processed) 50" />
+    <!--
+  <node pkg="tf" type="static_transform_publisher"  name="base_to_color"
+      args="$(arg optical_rotate) /base_link $(arg left_color_frame) 100" /> -->
+ 
+
+  <node name="camera_$(arg dm_preview_prefix)_node" pkg="dm_preview" type="dm_preview_node" output="screen" cwd="node" >
+    <!-- Camera params -->
+    <param name="dev_serial_number" type="str" value="$(arg dev_serial_number)" />
+    <param name="kernel_name" type="str" value="$(arg kernel_name)" />
+    <param name="framerate"     value="$(arg framerate)" />
+
+    <param name="color_mode" value="$(arg color_mode)" />
+    <param name="color_width"      value="$(arg color_width)" />
+    <param name="color_height"      value="$(arg color_height)" />
+    <param name="color_stream_format" value="$(arg color_stream_format)" />
+
+    <param name="depth_width"      value="$(arg depth_width)" />
+    <param name="depth_height"      value="$(arg depth_height)" />
+
+    <param name="state_ae"      value="$(arg state_ae)" />
+    <param name="state_awb"     value="$(arg state_awb)" />
+    <param name="exposure_time_step" value="$(arg exposure_time_step)" />
+    <param name="ir_intensity"  value="$(arg ir_intensity)" />
+
+    <param name="points_factor"    value="$(arg points_factor)" />
+
+    <param name="depth_type" value="$(arg depth_type)" />
+    <param name="depth_data_type" value="$(arg depth_data_type)" />
+    <param name="depth_maximum_mm"    value="$(arg depth_maximum_mm)" />
+
+    <!-- Frame ids -->
+    <param name="base_frame"   value="$(arg base_frame)" />
+    <param name="left_color_frame"  value="$(arg left_color_frame)" />
+    <param name="right_color_frame" value="$(arg right_color_frame)" />
+    <param name="depth_frame"  value="$(arg depth_frame)" />
+    <param name="points_frame" value="$(arg points_frame)" />
+    <param name="imu_frame"    value="$(arg imu_frame)" />
+    <param name="imu_frame_processed" value="$(arg imu_frame_processed)" />
+
+    <!-- Topic names -->
+    <param name="left_color_topic"  value="$(arg topic_prefix)/$(arg left_color_topic)" />
+    <param name="right_color_topic" value="$(arg topic_prefix)/$(arg right_color_topic)" />
+    <param name="depth_topic"       value="$(arg topic_prefix)/$(arg depth_topic)" />
+    <param name="points_topic"      value="$(arg topic_prefix)/$(arg points_topic)" />
+    <param name="imu_topic"         value="$(arg topic_prefix)/$(arg imu_topic)" />
+    <param name="imu_processed_topic" value="$(arg topic_prefix)/$(arg imu_processed_topic)" />
+  </node>
+</launch>

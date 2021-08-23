@@ -145,7 +145,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 
-set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/eys3d_wrapper")
+set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/" "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/DMPreview_utility/")
 message("eys3d_depth_INCLUDE_DIRS= ${eys3d_depth_INCLUDE_DIRS}")
 
 include_directories(
@@ -154,7 +154,8 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${eys3d_depth_INCLUDE_DIRS}
 )
-set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/libeYs3D_wrapper.so")
+
+set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/libeys3d.so")
 
 set(LINK_LIBRARIES
   ${catkin_LIBRARIES}
@@ -208,10 +209,10 @@ add_custom_command(TARGET dm_preview POST_BUILD
     cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/*.* ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
     )
 
-add_custom_command(TARGET dm_preview POST_BUILD 
-  COMMAND 
-  cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/eSPDI ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
-  )
+#add_custom_command(TARGET dm_preview POST_BUILD 
+#  COMMAND 
+#  cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/eSPDI ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
+#  )
 
 add_custom_command(TARGET dm_preview POST_BUILD 
 COMMAND 
