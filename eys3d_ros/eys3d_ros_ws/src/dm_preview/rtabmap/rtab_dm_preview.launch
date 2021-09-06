@@ -30,7 +30,7 @@
 
   <arg name="depth_width" default="0" />
   <arg name="depth_height" default="0" />
-  <arg name="depth_type" default="$(arg depth_gray)" />
+  <arg name="depth_type" default="$(arg depth_raw)" />
   <arg name="depth_data_type" default="$(arg type_11_bits)" />
 
   <arg name="depth_maximum_mm" default="1000" />

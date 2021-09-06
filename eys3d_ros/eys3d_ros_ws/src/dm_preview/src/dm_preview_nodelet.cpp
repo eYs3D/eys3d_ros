@@ -223,8 +223,19 @@ class DMPreviewNodelet : public nodelet::Nodelet {
                             (void *)frame->rgbVec.data());
       auto &&msg = cv_bridge::CvImage(header, enc::RGB8, mat).toImageMsg();
 
-      if (params_.depth_type_ == DepthType::Depth_Gray) {
+      switch (params_.depth_type_){
+        case DepthType::Depth_Raw: {
+            mat = cv::Mat(frame->height, frame->width, CV_16UC1,
+                            (void *)frame->dataVec.data());
+            msg = cv_bridge::CvImage(header, enc::MONO16, mat).toImageMsg();
+            break;
+        }
+        case DepthType::Depth_Gray: {
+            mat = cv::Mat(frame->height, frame->width, CV_16UC1,
+                            (void *)frame->dataVec.data());
             msg = cv_bridge::CvImage(header, enc::TYPE_16UC1, mat).toImageMsg();
+            break;
+        }
       }
 
       if(depth_info_ptr)
