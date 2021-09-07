@@ -90,6 +90,10 @@ The following instructions are written for ROS Melodic on Ubuntu 18.04
 - For more information, demos and tutorials about this package, visit [rtabmap_ros](http://wiki.ros.org/rtabmap_ros) page on ROS wiki.
 - Install rtabmap_ros package for melodic:  
     `sudo apt install ros-melodic-rtabmap-ros`  
+- To launch the example, open a terminal and launch:  
+    `cd eys3d_ros/eys3d_ros_ws; catkin_make; cd ..`  
+    `source ../eys3d_ros/eys3d_ros_ws/devel/setup.bash`  
+    `roslaunch dm_preview rtab_demo.launch` 
 ----------
 
  ## License
