@@ -50,7 +50,13 @@ The following instructions are written for ROS Melodic on Ubuntu 18.04
 
     `source ../eys3d_ros/eys3d_ros_ws/devel/setup.bash`
 
- 3. Create terminal and type below command:  
+ 3. Modify the 'display.launch' file based on the module information:  
+    The launch file located in "eys3d_ros/eys3d_ros_ws/src/launch"  
+    Please fill in the module's serial number in value field.  
+    for example:  
+     ` <arg name="dev_serial_number" value="8036D000000001" />  ` 
+    
+ 4. Create terminal and type below command:  
 
     `roslaunch dm_preview display.launch`  
         
