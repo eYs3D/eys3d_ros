@@ -216,8 +216,8 @@ add_custom_command(TARGET dm_preview POST_BUILD
 #  )
 
 add_custom_command(TARGET dm_preview POST_BUILD 
-COMMAND 
-cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_config/cfg ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../
+    COMMAND 
+    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_config/ ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/dm_preview/eYs3D/
     )
 
 #############
