@@ -3,22 +3,20 @@
     <!-- Stream format -->
   <arg name="stream_mjpg"       default="0" />
   <arg name="stream_yuyv"       default="1" />
-  
-  <arg name="camera1" value="8036" />
-  <arg name="camera2" value="8059" />
-  <arg name="camera3" value="2170" />
-  <arg name="camera4" value="hypatia" />
-  <arg name="camera5" value="8062" />
 
-  <arg name="tf_prefix1" value="$(arg camera1)" />
-  <arg name="tf_prefix2" value="$(arg camera2)" />
-  <arg name="tf_prefix3" value="$(arg camera3)" />
-  <arg name="tf_prefix4" value="$(arg camera4)" />
-  <arg name="tf_prefix5" value="$(arg camera5)" />
-  
+  <arg name="pi"   value="3.1415926535897932" />
+  <arg name="pi/2" value="1.5707963267948966" />
   <arg name="base_frame" value="dm_base_frame" />
 
-  <include file="$(find dm_preview)/launch/dm_preview.launch">
+  <!-- set 'true' if only one device, otherwise set 'false' -->
+  <arg name="single_module" value="true" />
+
+  <!-- please set the related parameters based on the module information for single module -->
+  <group if="$(arg single_module)">
+    <arg name="camera1" value="8036" />
+    <arg name="tf_prefix1" value="$(arg camera1)" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
     <arg name="module_name" value="$(arg camera1)" />
     <arg name="tf_prefix" value="$(arg tf_prefix1)" />
     <arg name="dev_serial_number" value="8036D9AF800115" />
@@ -27,11 +25,62 @@
     <arg name="depth_width" value="1280" />
     <arg name="depth_height" value="720" />
     <arg name="depth_maximum_mm" value="5000" />
+    </include>
+
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_8036_broadcaster"
+        args="0 1 0 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix1)_points_frame 30" />
+  </group>
+
+  <!-- please set the related parameters based on the module information for multi modules -->
+  <group unless="$(arg single_module)">
+    <arg name="camera1" value="8036" />
+    <arg name="camera2" value="8062" />
+    <arg name="tf_prefix1" value="$(arg camera1)" />
+    <arg name="tf_prefix2" value="$(arg camera2)" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="$(arg camera1)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix1)" />
+    <arg name="dev_serial_number" value="00000001" />
+    <arg name="color_width" value="1280" />
+    <arg name="color_height" value="720" />
+    <arg name="depth_width" value="1280" />
+    <arg name="depth_height" value="720" />
+    <arg name="depth_maximum_mm" value="5000" />
+    </include>
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="$(arg camera2)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix2)" />
+    <arg name="dev_serial_number" value="80625APA00022" />
+    <arg name="color_width" value="1280" />
+    <arg name="color_height" value="720" />
+    <arg name="depth_width" value="1280" />
+    <arg name="depth_height" value="720" />
+    </include>
+
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_8036_broadcaster"
+        args="0 1 0 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix1)_points_frame 30" />
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_8062_broadcaster"
+        args="0 1 0 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix2)_points_frame 30" />
+  </group>
+
+  <!-- referenced parameters for each module -->
+  <!--
+  <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="8036" />
+    <arg name="tf_prefix" value="8036" />
+    <arg name="dev_serial_number" value="00000001" />
+    <arg name="color_width" value="1280" />
+    <arg name="color_height" value="720" />
+    <arg name="depth_width" value="1280" />
+    <arg name="depth_height" value="720" />
+    <arg name="depth_maximum_mm" value="5000" />
   </include>
 
   <include file="$(find dm_preview)/launch/dm_preview.launch">
-    <arg name="module_name" value="$(arg camera2)" />
-    <arg name="tf_prefix" value="$(arg tf_prefix2)" />
+    <arg name="module_name" value="8059" />
+    <arg name="tf_prefix" value="8059" />
     <arg name="dev_serial_number" value="8059123456" />
     <arg name="color_width" value="640" />
     <arg name="color_height" value="400" />
@@ -40,8 +89,8 @@
   </include>
 
   <include file="$(find dm_preview)/launch/dm_preview.launch">
-    <arg name="module_name" value="$(arg camera3)" />
-    <arg name="tf_prefix" value="$(arg tf_prefix3)" />
+    <arg name="module_name" value="2170" />
+    <arg name="tf_prefix" value="2170" />
     <arg name="kernel_name" value="1-13.2:1.01" />
     <arg name="color_width" value="640" />
     <arg name="color_height" value="480" />
@@ -50,8 +99,8 @@
   </include>
 
   <include file="$(find dm_preview)/launch/dm_preview.launch">
-    <arg name="module_name" value="$(arg camera4)" />
-    <arg name="tf_prefix" value="$(arg tf_prefix4)" />
+    <arg name="module_name" value="8071" />
+    <arg name="tf_prefix" value="8071" />
     <arg name="kernel_name" value="1-13.2:1.0" />
     <arg name="color_width" value="640" />
     <arg name="color_height" value="400" />
@@ -60,25 +109,17 @@
     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
     <arg name="ir_intensity" value="48" />
   </include>
-  
+
   <include file="$(find dm_preview)/launch/dm_preview.launch">
-    <arg name="module_name" value="$(arg camera5)" />
-    <arg name="tf_prefix" value="$(arg tf_prefix1)" />
+    <arg name="module_name" value="8062" />
+    <arg name="tf_prefix" value="8062" />
     <arg name="dev_serial_number" value="00000001" />
     <arg name="color_width" value="1280" />
     <arg name="color_height" value="720" />
     <arg name="depth_width" value="1280" />
     <arg name="depth_height" value="720" />
   </include>
-
-  <arg name="pi"   value="3.1415926535897932" />
-  <arg name="pi/2" value="1.5707963267948966" />
-  <node pkg="tf" type="static_transform_publisher" name="point_cloud_8059_broadcaster"
-  args="0 1 0 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix1)_points_frame 30" />
-  <node pkg="tf" type="static_transform_publisher" name="point_cloud_8036_broadcaster"
-  args="0 0 1 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix2)_points_frame 30" />
-  <node pkg="tf" type="static_transform_publisher" name="point_cloud_hypatia_broadcaster"
-  args="1 0 0 -$(arg pi/2) 0 -$(arg pi/2) $(arg base_frame) $(arg tf_prefix4)_points_frame 30" />
+  -->
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dm_preview)/rviz/dm_preview.rviz" output="screen"/>
 </launch>
