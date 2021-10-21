@@ -63,8 +63,15 @@ private:
     
     // Helper to perform snapshot in another working thread
     void performSnapshotWork(const Frame *colorFrame, const Frame *depthFrame);
-    
+#ifdef WIN32	
+	uint32_t mTimeDeltaMs;
+    uint8_t  mFps;
+#endif    
     int producePCFrame(PCFrame *pcFrame);
+
+    //++support point cloud for depth only mode
+    int produceDepthOnlyPCFrame(PCFrame *pcFrame);
+    //--support point cloud for depth only mode
 
     // mDataQueue contains filled video frames and mFreeQueue has available
     // video frames that the producer can use. The workflow is as follows:
@@ -83,8 +90,11 @@ private:
     base::MessageChannel<Frame, kMaxFrames> mFreeColorFrameQueue;
     base::MessageChannel<Frame, kMaxFrames> mDepthFrameQueue;
     base::MessageChannel<Frame, kMaxFrames> mFreeDepthFrameQueue;
+	base::MessageChannel<Frame, 1> mColorSnapQueue;
+	base::MessageChannel<Frame, 1> mDepthSnapQueue;
     base::MessageChannel<int, 2> mSignal;
     base::MessageChannel<int, 1> mSnapshotSignal;
+	base::MessageChannel<int, 1> mSnapshotBackSignal;
     base::MessageChannel<int, 1> mSnapshotFinishedSignal;
     bool mIsStopped = false;
     

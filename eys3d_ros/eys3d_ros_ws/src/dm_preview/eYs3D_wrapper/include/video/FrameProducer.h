@@ -73,7 +73,9 @@ public:
     virtual void pausePCCallback();
     
     void dumpFrameInfo(int frameCount = 60);
-    void doSnapshot();
+    void doSnapshot(int StreamType);
+    bool doColorSnapShot = false;
+    bool doDepthSnapShot = false;
 
 protected:
     FrameProducer(libeYs3D::devices::CameraDevice *cameraDevice,
@@ -149,6 +151,7 @@ private:
     base::MessageChannel<Frame, kMaxFrames> mStageQueue;
     base::MessageChannel<Frame, kMaxFrames> mStage2Queue;
     base::MessageChannel<Frame, kMaxFrames> mFreeQueue;
+	base::MessageChannel<Frame, 1> mSnapQueue;
     base::MessageChannel<int, 4> mSignal;
     base::MessageChannel<int, 2> mCBFinishSignal; // for callback notification
     base::MessageChannel<int, 1> mPauseSignal;

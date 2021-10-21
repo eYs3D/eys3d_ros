@@ -9,6 +9,8 @@
 #ifdef WIN32
 #  include "eSPDI_Common.h"
 #  include "magic.h"
+#include <ks.h>
+#include <KsMedia.h>	//for PropertyPage item R/W
 #else
 #  include "eSPDI_def.h"
 #  include <linux/limits.h>

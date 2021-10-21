@@ -1128,6 +1128,45 @@ int  APC_Get2Image (void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
                         BYTE *pColorImgBuf, BYTE *pDepthImgBuf,
                         unsigned long int *pColorImageSize, unsigned long int *pDepthImageSize,
                         int *pSerial = 0, int *pSerial2 = 0, int nDepthDataType =0);
+
+/*! \fn int APC_Get2ImageWithTimestamp(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *pColorImgBuf,
+        BYTE *pDepthImgBuf,
+        unsigned long int *pColorImageSize,
+        unsigned long int *pDepthImageSize,
+        int *pColorSerial,
+        int *pDepthSerial,
+        int nDepthDataType)
+    \brief get color and/or depth pin images
+        see APC_GetImage for detailed description
+    \param void *pHandleEYSD	handle
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param BYTE *pColorImgBuf	buffer to store color image
+    \param BYTE *pDepthImgBuf	buffer to store depth image
+    \param unsigned long int *pColorImageSize	the actual color buffer size
+    \param unsigned long int *pDepthImageSize	the actual depth buffer size
+    \param int *pColorSerial		color serial number
+    \param int *pDepthSerial	depth serial number
+    \param int nDepthDataType	the depth data type, see definition in eSPDI_def.h
+    \param int64_t *pcur_tv_sec seconds in 'v4l2_buffer' timestamp of this image data
+    \param int64_t *pcur_tv_usec microseconds in 'v4l2_buffer' timestamp of this image data
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_Get2ImageWithTimestamp(
+    void *pHandleEYSD,
+    PDEVSELINFO pDevSelInfo,
+    BYTE *pColorImgBuf,
+    BYTE *pDepthImgBuf,
+    unsigned long int *pColorImageSize,
+    unsigned long int *pDepthImageSize,
+    int *pColorSerial,
+    int *pDepthSerial,
+    int nDepthDataType,
+    int64_t *pcur_tv_sec,
+    int64_t *pcur_tv_usec);
+
 // image -			
 
 // for AEAWB Control +
@@ -2449,6 +2488,7 @@ int APC_GetPointCloud( void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned char
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int APC_ColorFormat_to_RGB24( void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type );
+int APC_ColorFormat_to_BGR24( void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type );
 
 } // end of extern "C" 02
 
@@ -2469,6 +2509,28 @@ int APC_ColorFormat_to_RGB24( void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsign
 
 int APC_RotateImg90(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
                     APCImageType::Value imgType, int width, int height, unsigned char *src, unsigned char *dstBuf, int len, bool clockwise);
+
+
+
+/*! \fn int APC_RotateImg180(
+        void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
+        APCImageType::Value imgType, int width, int height,
+        unsigned char *src, unsigned char *dstBuf, int len)
+    \brief Rotate the image to 180 degree.
+    \param void * pHandleEYSD	 the pointer to the initilized EYSD SDK instance
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param APCImageType::Value mgType Image Type
+    \param int width image width
+    \param int height image height
+    \param unsigned char *src image source
+    \param unsigned char *dstBuf image desteration
+    \param int len desteration buffer length
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_RotateImg180(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
+                     APCImageType::Value imgType, int width, int height,unsigned char *src, unsigned char *dst, int len);
+
+
 
 /*! \fn int APC_ImgMirro(
     void *pHandleEYSD,

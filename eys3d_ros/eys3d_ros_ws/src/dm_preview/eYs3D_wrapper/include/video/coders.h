@@ -60,7 +60,7 @@ static inline int get_depth_image_format_byte_length_per_pixel(APCImageType::Val
     }
 }
 
-int color_image_produce_rgb_frame(const CameraDevice *cameraDevice, Frame *frame);
+int color_image_produce_bgr_frame(const CameraDevice *cameraDevice, Frame *frame);
 int depth_image_produce_rgb_frame(const CameraDevice *cameraDevice, Frame *frame);
 
 int convert_yuv_to_rgb_buffer(uint8_t *yuv, uint8_t *rgb,

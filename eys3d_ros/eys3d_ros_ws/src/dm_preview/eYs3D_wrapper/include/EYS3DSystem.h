@@ -54,7 +54,13 @@ struct DeviceSellectInfo    {
 
 class EYS3DSystem    {
 public:
+    enum class COLOR_BYTE_ORDER {
+        COLOR_RGB24,
+        COLOR_BGR24
+    };
+    COLOR_BYTE_ORDER mColorByteOrder;
     static std::shared_ptr<EYS3DSystem> getEYS3DSystem();
+    static std::shared_ptr<EYS3DSystem> getEYS3DSystemRGBOrder(COLOR_BYTE_ORDER colorByteOrder);
 
     int getCameraDeviceCount()    { return mDeviceCount; }
     std::shared_ptr<CameraDevice> getCameraDevice(int index);
@@ -65,7 +71,7 @@ public:
     uint8_t generateModelID();
     
     void dumpSystemInfo();
-    
+
     const char *getSDKHomePath();
     const char *getHomePath() const   { return mHomePath; }
     const char *getLogPath() const   { return mLogPath; }
@@ -81,6 +87,7 @@ public:
 
 private:
     explicit EYS3DSystem();
+    explicit EYS3DSystem(COLOR_BYTE_ORDER colorByteOrder);
 
     int initialize();
     int createEYS3DHome();
@@ -107,6 +114,7 @@ private:
     char mReadRegisterLogsPath[PATH_MAX];
     
     int mFPSWindowSize;
+
 };
 
 } // end of namespace libeYs3D

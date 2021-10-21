@@ -81,7 +81,7 @@ namespace video    { // forward declaration for friendship assignment
     class DepthFrameProducer;
     class PCFrameProducer;
      
-    int color_image_produce_rgb_frame(const libeYs3D::devices::CameraDevice *cameraDevice,
+    int color_image_produce_bgr_frame(const libeYs3D::devices::CameraDevice *cameraDevice,
                                       libeYs3D::video::Frame *frame);
     int depth_image_produce_rgb_frame(const libeYs3D::devices::CameraDevice *cameraDevice,
                                       libeYs3D::video::Frame *frame);
@@ -136,6 +136,7 @@ struct ZDTableInfo    {
 
 class CameraDevice     {
 public:
+    using COLOR_BYTE_ORDER = ::libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER;
     CameraDeviceInfo& getCameraDeviceInfo()    { return mCameraDeviceInfo; }
 
     struct FocalLength{
@@ -269,9 +270,11 @@ public:
     //virtual void SetIMUSyncWithFrame(bool bSync);
     //virtual bool IsIMUSyncWithFrame();
     void dumpIMUData(int recordCount = 256);
+    std::vector<IMUDevice::IMU_DATA_FORMAT> getSupportDataFormat() {return mIMUDevice->getSupportDataFormat();}
+    int selectDataFormat(IMUDevice::IMU_DATA_FORMAT format);
     
     void dumpFrameInfo(int frameCount = 60);
-    void doSnapshot();
+    void doSnapshot(int StreamType);
     virtual bool isPlyFilterSupported() { return true; }
     void enablePlyFilter(bool enable);
     bool isPlyFilterEnabled() { return mPlyFilterEnabled; }
@@ -308,6 +311,7 @@ public:
 	void UpdateFocalLength();
 
 protected:
+    explicit CameraDevice(DEVSELINFO *devSelInfo, DEVINFORMATION *deviceInfo, const COLOR_BYTE_ORDER colorByteOrder = COLOR_BYTE_ORDER::COLOR_RGB24);
     explicit CameraDevice(DEVSELINFO *devSelInfo, DEVINFORMATION *deviceInfo);
 
     virtual int initStreamInfoList();
@@ -356,6 +360,7 @@ protected:
     Rect mDepthAccuracyRegion;
     CameraDeviceProperties mCameraDeviceProperties;
     IRProperty mIRProperty;
+    const COLOR_BYTE_ORDER mColorByteOrder;
 
 public:
     RegisterReadWriteOptions mRegisterReadWriteOptions;
@@ -437,7 +442,7 @@ public:
     friend void MemoryAllocator__deallocate(CameraDevice *cameraDevice, void *p, size_t size);
     friend size_t MemoryAllocator__max_size(CameraDevice *cameraDevice);
     
-    friend int libeYs3D::video::color_image_produce_rgb_frame(const CameraDevice *cameraDevice,
+    friend int libeYs3D::video::color_image_produce_bgr_frame(const CameraDevice *cameraDevice,
                                                               libeYs3D::video::Frame *frame);
     friend int libeYs3D::video::depth_image_produce_rgb_frame(const CameraDevice *cameraDevice,
                                                               libeYs3D::video::Frame *frame);
@@ -463,12 +468,21 @@ protected:
     MemoryAllocator<uint8_t> mPixelByteMemoryAllocator;
     MemoryAllocator<float> mPixelFloatMemoryAllocator;
     
-#endif                                        
+#endif
+
+#ifdef WIN32
+    static constexpr int kMaxFrames = 64;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mColorQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDepthQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mCFreeQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDFreeQueue;
+#endif
 };
 
 class CameraDeviceFactory    {
+    using COLOR_BYTE_ORDER = ::libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER;
 public:
-    static CameraDevice *createCameradevice(DEVSELINFO *devSelInfo, DEVINFORMATION *devInfo);
+    static CameraDevice *createCameradevice(DEVSELINFO *devSelInfo, DEVINFORMATION *devInfo, COLOR_BYTE_ORDER colorByteOrder);
 };
 
 } // end of namespace devices

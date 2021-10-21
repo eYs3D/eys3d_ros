@@ -64,6 +64,7 @@ public:
         char serialNumber[256];
         char fwVersion[256];
         char moduleName[256];
+        char imuLogPath[4096];
         bool status;
         bool isValid;
         
@@ -101,6 +102,7 @@ public:
     void pauseDepthStream();
     
     virtual void dumpIMUData(int recordCount = 256);
+    char* getIMULogPath() {return mIMUDeviceInfo.imuLogPath;}
                                 
     virtual void closeStream();
 
