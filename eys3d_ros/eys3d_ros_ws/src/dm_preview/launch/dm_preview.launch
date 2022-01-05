@@ -16,6 +16,8 @@
   <arg name="type_8_bits"               default="1" />
   <arg name="type_14_bits"              default="2" />
   <arg name="type_11_bits"              default="4" />
+  <arg name="type_11_bits_interleave_mode"         default="20" />
+  <arg name="type_11_bits_scale_down"              default="36" />
 
   <!-- Note: must set DEPTH_RAW to get raw depth values for points -->
 
@@ -32,6 +34,10 @@
   <arg name="depth_height" default="0" />
   <arg name="depth_type" default="$(arg depth_colorful)" />
   <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+  <!-- auto config interleave-mode that dependents on depth_data_type -->
+  <arg name="interleave_mode" default="true" if="$(eval depth_data_type == type_11_bits_interleave_mode)"/>
+  <arg name="interleave_mode" default="false" if="$(eval depth_data_type != type_11_bits_interleave_mode)"/>
 
   <arg name="depth_maximum_mm" default="1000" />
 
@@ -101,6 +107,7 @@
 
     <param name="depth_width"      value="$(arg depth_width)" />
     <param name="depth_height"      value="$(arg depth_height)" />
+    <param name="interleave_mode"      value="$(arg interleave_mode)" />
 
     <param name="state_ae"      value="$(arg state_ae)" />
     <param name="state_awb"     value="$(arg state_awb)" />

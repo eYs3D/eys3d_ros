@@ -121,6 +121,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     int depth_height_;
     int depth_data_type_;
     DepthType depth_type_;
+    bool interleave_mode_;
 
     int z_maximum_mm_;
 
@@ -195,7 +196,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
 
       cv::Mat mat =
           cv::Mat(frame->height, frame->width, CV_8UC3, (void *)frame->rgbVec.data());
-      auto &&msg = cv_bridge::CvImage(header, enc::RGB8, mat).toImageMsg();
+      auto &&msg = cv_bridge::CvImage(header, enc::BGR8, mat).toImageMsg();
 
       if(left_info_ptr)
       {
@@ -258,9 +259,12 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           iter_x[1] = pcFrame->xyzDataVec[index * 3 + 1] / 1000.0f;
           iter_x[2] = pcFrame->xyzDataVec[index * 3 + 2] / 1000.0f;
 
-          iter_rgb[0] = pcFrame->rgbDataVec[index * 3 + 2];
+          //iter_rgb[0] = pcFrame->rgbDataVec[index * 3 + 2];
+          //iter_rgb[1] = pcFrame->rgbDataVec[index * 3 + 1];
+          //iter_rgb[2] = pcFrame->rgbDataVec[index * 3];
+          iter_rgb[2] = pcFrame->rgbDataVec[index * 3 + 2];
           iter_rgb[1] = pcFrame->rgbDataVec[index * 3 + 1];
-          iter_rgb[2] = pcFrame->rgbDataVec[index * 3];
+          iter_rgb[0] = pcFrame->rgbDataVec[index * 3];
 
           ++iter_x; ++iter_rgb;
       }
@@ -354,6 +358,8 @@ class DMPreviewNodelet : public nodelet::Nodelet {
       int depth_type;
       nh_ns.getParamCached("depth_type", depth_type);
       params_.depth_type_ = (DepthType) depth_type;
+
+      nh_ns.getParamCached("interleave_mode", params_.interleave_mode_);
 
       nh_ns.getParamCached("depth_data_type", params_.depth_data_type_);
       nh_ns.getParamCached("depth_maximum_mm", params_.z_maximum_mm_);
@@ -509,6 +515,19 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           std::bind(&DMPreviewNodelet::imu_data_callback, this,
                     std::placeholders::_1));
 
+    //enable/disable insterleave mode if device support
+    bool isSupportInterLeaveMode = device_->isInterleaveModeSupported();
+    device_->enableInterleaveMode(true);
+    device_->enableInterleaveMode(false);
+    NODELET_INFO_STREAM("isInterleaveModeSupported : " << isSupportInterLeaveMode);
+    if (isSupportInterLeaveMode) {
+        ret = device_->enableInterleaveMode(params_.interleave_mode_);
+        if ( ret == APC_OK ) {
+            NODELET_INFO_STREAM("is InterLeave Mode enabled: " << device_->isInterleaveModeEnabled());
+        } else {
+            NODELET_INFO_STREAM("enable Interleave Mode failure reason : " << ret);
+        }
+    }
       device_->enableStream();
       
       uint16_t z_near, z_far;
@@ -522,7 +541,10 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   }
 
   void closeDevice() {
-      if (device_) device_->closeStream();
+
+      if (device_) {
+          device_->closeStream();
+      }
   }
 
   ros::Time hardTimeToSoftTime(std::uint64_t _hard_time) {
