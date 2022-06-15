@@ -71,7 +71,7 @@ public:
      */
     uint32_t dataFormat;
     
-    /* TODO:
+    /*
      * the format of RGB transcoding format 
      */
     uint32_t rgbFormat;
@@ -99,8 +99,12 @@ public:
           uint64_t rgbBufferSize = 0, uint8_t initRGBVal = 0);
     
 #ifdef DEVICE_MEMORY_ALLOCATOR
-    Frame(uint64_t dataBufferSize, uint64_t rgbBufferSize, uint8_t val,
-          libeYs3D::devices::MemoryAllocator<uint8_t> &allocator);
+
+	Frame(uint64_t dataBufferSize, uint8_t initDataVal,
+		  uint64_t zdDepthBufferSize, uint16_t initZDDepthVal,
+		  uint64_t rgbBufferSize, uint8_t initRGBVal,
+		  libeYs3D::devices::MemoryAllocator<uint8_t> &byte_allocator,
+		  libeYs3D::devices::MemoryAllocator<uint16_t> &word_allocator);
 #endif
 
     int toString(char *buffer, int bufferLength) const;

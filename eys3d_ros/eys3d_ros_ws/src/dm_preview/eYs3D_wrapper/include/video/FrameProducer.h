@@ -128,10 +128,10 @@ private:
     void rgbFramesWorker();
     // Helper to perfrom filetering
     void frameFilteringWorker();
-    
+  
     // Heper to perfrom snapshot
     virtual void performSnapshotWork(Frame *frame) = 0;
-    
+
     uint32_t mTimeDeltaMs;
     uint8_t  mFps;
     uint8_t  mTimeLimitSecs;
@@ -153,7 +153,8 @@ private:
     base::MessageChannel<Frame, kMaxFrames> mFreeQueue;
 	base::MessageChannel<Frame, 1> mSnapQueue;
     base::MessageChannel<int, 4> mSignal;
-    base::MessageChannel<int, 2> mCBFinishSignal; // for callback notification
+    base::MessageChannel<int, 1> mCBFinishSignal; // for callback notification
+	base::MessageChannel<int, 1> mPCCBFinishSignal;
     base::MessageChannel<int, 1> mPauseSignal;
     base::MessageChannel<int, 1> mPauseBackSignal;
     base::MessageChannel<int, 1> mSnapshotSignal;

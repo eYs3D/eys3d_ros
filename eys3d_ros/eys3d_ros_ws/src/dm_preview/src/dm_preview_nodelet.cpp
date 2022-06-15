@@ -254,7 +254,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
       sensor_msgs::PointCloud2Iterator<float> iter_x(point_msg, "x");
       sensor_msgs::PointCloud2Iterator<uint8_t> iter_rgb(point_msg, "rgb");
 
-      for (int index = 0; index < pcFrame->width * pcFrame->height; ++index) {
+      for (int index = 0; index < point_msg.width * point_msg.height; ++index) {
           iter_x[0] = pcFrame->xyzDataVec[index * 3] / 1000.0f;
           iter_x[1] = pcFrame->xyzDataVec[index * 3 + 1] / 1000.0f;
           iter_x[2] = pcFrame->xyzDataVec[index * 3 + 2] / 1000.0f;
@@ -309,7 +309,6 @@ class DMPreviewNodelet : public nodelet::Nodelet {
  
     // open device
     openDevice();
-    
     //++Calibration info
     bool in_ok;
     StreamMode mStreamMode = getStreamModeIndex();
@@ -323,7 +322,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     right_info_ptr = createCameraInfo(in.right);
     depth_info_ptr = createCameraInfo(in.left);
     //--Calibration info
-    
+
     // loop
     ros::Rate loop_rate(params_.framerate_);
     while (nh_ns.ok()) {
@@ -427,8 +426,8 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   }
 
   void openDevice() {
-      
-      eYs3DSystem_ = libeYs3D::EYS3DSystem::getEYS3DSystem();
+
+      eYs3DSystem_ = std::make_shared<libeYs3D::EYS3DSystem>(libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER::COLOR_RGB24);
 
       int index = 0;
       if (!params_.serial_number_.empty() || !params_.kernel_name_.empty()) {

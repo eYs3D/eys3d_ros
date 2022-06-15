@@ -46,9 +46,11 @@ class AutoReadLock;
 class StaticLock {
 public:
     using AutoLock = base::AutoLock;
-
+#ifdef _WIN32
+    StaticLock() { ::InitializeSRWLock(&mLock); };
+#else
     constexpr StaticLock() = default;
-
+#endif
     // Acquire the lock.
     void lock() {
 #ifdef _WIN32

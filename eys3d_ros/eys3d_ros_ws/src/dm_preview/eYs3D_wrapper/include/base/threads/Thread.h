@@ -87,6 +87,10 @@ public:
     // (e.g. if the thread was already started or terminated).
     bool start();
 
+	// Teminate a thread. Return true on success, false otherwise
+	// NB: noop for non-Win32
+	bool terminate();
+
     // Wait for thread termination and retrieve exist status into
     // |*exitStatus|. Return true on success, false otherwise.
     // NOTE: |exitStatus| can be NULL.
@@ -148,6 +152,7 @@ public:
         Thread(flags, stackSize) { }
 
     virtual void interrupt() = 0;
+	
 };
 
 }  // namespace base

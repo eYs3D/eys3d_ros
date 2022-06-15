@@ -51,10 +51,11 @@ protected:
     virtual int performROIComputation(Frame *frame) override;
     
     virtual void checkIMUDeviceCBEnablement() override;
-    
+
     virtual void performSnapshotWork(Frame *frame) override;
-    
+
     virtual void logProducerTick(const char *FMT, ...) override;
+    int m_nLastInterLeaveDepthSerial;
     
 protected:
     void virtual attachReaderWorkerCGgroup() override;
@@ -63,6 +64,8 @@ protected:
     void virtual attachCallbackWorkerCGgroup() override;
     
 private:
+    libeYs3D::base::Lock mLock;
+    libeYs3D::base::Lock mmLock;
     std::vector<uint16_t> mTableZ14ToD11;
     std::vector<uint16_t> mZ14ToD11;
     
@@ -88,6 +91,19 @@ private:
     int64_t mCurrentTimeForAccuracy;
     int64_t mNewTimeForAccuracy;
     int mSignalControlForAccuracy;
+    std::vector< WORD > GetDepthZOfROI(Frame *frame , int &nWidth, int &nHeight);
+    void CalculateFittedPlane(double &a, double &b, double &d,
+                              std::vector< WORD > &vecDepthZ, int nWidth , int nHeigth);
+    void SortZ(std::vector< WORD > &vecDepthZ, double dblDeleteBoundaryRatio = 0.005);
+    std::vector< double > vectorCrossProduct(std::vector< double > vecBefore , std::vector< double > vecAfter);
+    double vectorDotProduct(std::vector< double > vecBefore , std::vector< double > vecAfter);
+
+
+    double CalculateZAccuracy(std::vector< WORD > &vecDepthZ,
+                                                 int nWidth, int nHeight,
+                                                 double grandtrue,
+                                                 double m_fDepthAccuracyDistanceMM,
+                                                 std::vector< double > vecBefore, std::vector< double > vecAfter);
     //int mSignalMessageForAccuracy;
 
     //bool mIsFinishedForROI;

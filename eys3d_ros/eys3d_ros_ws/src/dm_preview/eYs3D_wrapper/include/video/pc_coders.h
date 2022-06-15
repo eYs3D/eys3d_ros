@@ -29,7 +29,7 @@ using libeYs3D::devices::CameraDevice;
 namespace libeYs3D    {
 namespace video    {
 
-int generate_point_cloud(CameraDevice *cameraDevice, const char *plyFilePath,
+int generate_point_cloud(std::shared_ptr<CameraDevice> cameraDevice, const char *plyFilePath,
                          std::vector<uint8_t> &depthData,
                          int nDepthWidth, int nDepthHeight,
                          std::vector<uint8_t> &colorData,

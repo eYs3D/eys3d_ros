@@ -99,11 +99,10 @@ struct CameraDeviceInfo    {
     DEVINFORMATION devInfo;
 
 #ifdef WIN32
-    // TODO: windows impl : if not initialize will crash, need rename or place a suitable content
-    char firmwareVersion[PATH_MAX] = "FAKE SN INFO";
-    char serialNumber[PATH_MAX] = "FAKE SN INFO";
-    char busInfo[PATH_MAX] = "FAKE BUS INFO";
-    char modelName[PATH_MAX] = "FAKE MODEL NAME";
+    char firmwareVersion[PATH_MAX] = "Unsupported";
+    char serialNumber[PATH_MAX] = "Unsupported";
+    char busInfo[PATH_MAX] = "Unsupported";
+    char modelName[PATH_MAX] = "Unsupported";
 #else
     char firmwareVersion[PATH_MAX];
     char serialNumber[PATH_MAX];
@@ -134,7 +133,9 @@ struct ZDTableInfo    {
     uint16_t nZDTableMaxNear;
 };
 
-class CameraDevice     {
+class CameraDevice
+	: public std::enable_shared_from_this<CameraDevice>
+{
 public:
     using COLOR_BYTE_ORDER = ::libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER;
     CameraDeviceInfo& getCameraDeviceInfo()    { return mCameraDeviceInfo; }
@@ -235,7 +236,9 @@ public:
 
     // return a copy of current device IR property
     virtual IRProperty getIRProperty();
+    virtual int setIRMax(bool ExtendIREnabled);
     virtual int setIRProperty(IRProperty property);
+    bool enableExtendIR(bool enabled);
 
     virtual float getManuelExposureTimeMs();
     virtual void setManuelExposureTimeMs(float fMS);
@@ -303,12 +306,9 @@ public:
     std::vector<APC_STREAM_INFO> getColorStreamInfo() { return mColorStreamInfo; }
     std::vector<APC_STREAM_INFO> getDepthStreamInfo() { return mDepthStreamInfo; }
 
-	int GetPixelUnit(){ return m_nPixelUnit;} 
-	void UpdatePixelUnit();
-	void SetPixelUnit(short nPixelUnit);
-
     FocalLength GetFocalLength() { return m_FocalLength; }
 	void UpdateFocalLength();
+    uint16_t nZNear_default;
 
 protected:
     explicit CameraDevice(DEVSELINFO *devSelInfo, DEVINFORMATION *deviceInfo, const COLOR_BYTE_ORDER colorByteOrder = COLOR_BYTE_ORDER::COLOR_RGB24);
@@ -454,8 +454,15 @@ public:
                                                      int nColorWidth, int nColorHeight,
                                                      bool usePlyFilter);
 
-#ifdef DEVICE_MEMORY_ALLOCATOR
+#ifdef WIN32
+    static constexpr int kMaxFrames = 64;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mColorQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDepthQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mCFreeQueue;
+    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDFreeQueue;
+#endif
 
+#ifdef DEVICE_MEMORY_ALLOCATOR
 protected:
     // memory allocation
     std::map<void *, size_t>mMemories;
@@ -464,25 +471,18 @@ protected:
     void returnMemory(const void *memory, size_t size);
     int preallocateMemory();
     void releasePreallocatedMemory();
-    
+
+	MemoryAllocator<uint16_t> mPixelWordMemoryAllocator;
     MemoryAllocator<uint8_t> mPixelByteMemoryAllocator;
     MemoryAllocator<float> mPixelFloatMemoryAllocator;
     
-#endif
-
-#ifdef WIN32
-    static constexpr int kMaxFrames = 64;
-    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mColorQueue;
-    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDepthQueue;
-    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mCFreeQueue;
-    base::MessageChannel<libeYs3D::video::Frame, kMaxFrames> mDFreeQueue;
 #endif
 };
 
 class CameraDeviceFactory    {
     using COLOR_BYTE_ORDER = ::libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER;
 public:
-    static CameraDevice *createCameradevice(DEVSELINFO *devSelInfo, DEVINFORMATION *devInfo, COLOR_BYTE_ORDER colorByteOrder);
+    static std::shared_ptr<CameraDevice> createCameradevice(DEVSELINFO *devSelInfo, DEVINFORMATION *devInfo, COLOR_BYTE_ORDER colorByteOrder);
 };
 
 } // end of namespace devices

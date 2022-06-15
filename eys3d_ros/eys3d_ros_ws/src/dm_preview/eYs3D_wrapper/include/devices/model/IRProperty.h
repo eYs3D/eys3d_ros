@@ -29,6 +29,8 @@ public:
     
     void enableExtendIR(bool enabled)    { mExtendIREnabled = enabled; }
     bool isExtendIREnabled()    { return mExtendIREnabled; }
+    void enableExtendIRSupport(bool enabled)   { mExtendIRSupport = enabled; }
+    bool isExtendIRSupport()    { return mExtendIRSupport; }
     
     void setIRValue(uint16_t value)    { mIRValue = value; }
     uint16_t getIRValue()    { return mIRValue; }
@@ -45,6 +47,7 @@ protected:
 
 private:
     bool mExtendIREnabled;
+    bool mExtendIRSupport;
     uint16_t mIRMax;
     uint16_t mIRMin;
     uint16_t mIRValue;
