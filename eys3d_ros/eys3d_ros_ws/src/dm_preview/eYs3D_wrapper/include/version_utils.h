@@ -7,8 +7,8 @@
 #define EYS3D_DEPTH_VERSION_TWEAK 32
 
 #define WRAPPER_VERSION "1.0.0.32"
-#define GIT_BRANCH "general_wrapper"
-#define GIT_HASH "290c555"
-#define BUILD_TIMESTAMP "2022-06-15 16:00:09"
+#define GIT_BRANCH ""
+#define GIT_HASH ""
+#define BUILD_TIMESTAMP "2022-06-24 10:14:04"
 
 #endif // VERSION_UTILS_H_IN

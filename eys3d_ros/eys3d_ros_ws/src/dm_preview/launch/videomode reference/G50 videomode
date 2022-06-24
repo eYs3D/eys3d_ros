@@ -1,0 +1,57 @@
+G50 = 8052, FOV = 50 Global shutter
+support video mode:
+
+HD 60,30,10fps  /mono
+     <arg name="color_width"     value="1280" />  
+     <arg name="color_height"    value="720"  />
+     <arg name="depth_width"     value="1280" />
+     <arg name="depth_height"    value="720"  />
+     <arg name="framerate"       default="60" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+HD 30fps /interleave_mode  /color without IR dot
+     <arg name="color_width"     value="1280" />  
+     <arg name="color_height"    value="720"  />
+     <arg name="depth_width"     value="1280" />
+     <arg name="depth_height"    value="720"  />
+     <arg name="framerate"       default="60" />
+     <arg name="depth_data_type" default="$(arg type_11_bits_interleave_mode)" />
+
+HD color VGA depth 30,15,10fps  /scale_down  /mono
+     <arg name="color_width"     value="1280" />  
+     <arg name="color_height"    value="720"  />
+     <arg name="depth_width"     value="640"  />
+     <arg name="depth_height"    value="360"  />
+     <arg name="framerate"       default="30" />
+     <arg name="depth_data_type" default="$(arg type_11_bits_scale_down)" />
+
+HD 60,30fps  /color only
+     <arg name="color_width"     value="1280" />  
+     <arg name="color_height"    value="720"  />
+     <arg name="depth_width"     value="0"    />
+     <arg name="depth_height"    value="0"    />
+     <arg name="framerate"       default="60" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+HD 60,30,10fps  /depth only
+     <arg name="color_width"     value="0"    />  
+     <arg name="color_height"    value="0"    />
+     <arg name="depth_width"     value="1280" />
+     <arg name="depth_height"    value="720"  />
+     <arg name="framerate"       default="60" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+VGA 30,15,10fps  /depth only  /scale_down
+     <arg name="color_width"     value="0"    />  
+     <arg name="color_height"    value="0"    />
+     <arg name="depth_width"     value="640"  />
+     <arg name="depth_height"    value="360"  />
+     <arg name="framerate"       default="30" />
+     <arg name="depth_data_type" default="$(arg type_11_bits_scale_down)" />
+
+
+
+
+
+
+

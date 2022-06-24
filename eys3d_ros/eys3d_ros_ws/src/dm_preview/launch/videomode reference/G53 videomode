@@ -1,0 +1,32 @@
+G53 = 8071, FOV = 50 Global shutter
+support video mode:
+
+640*400 30fps  /mono
+     <arg name="color_width"     value="640" />  
+     <arg name="color_height"    value="400"  />
+     <arg name="depth_width"     value="640" />
+     <arg name="depth_height"    value="400"  />
+     <arg name="framerate"       default="30" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+320*200 30fps  /mono
+     <arg name="color_width"     value="320" />  
+     <arg name="color_height"    value="200"  />
+     <arg name="depth_width"     value="320" />
+     <arg name="depth_height"    value="200"  />
+     <arg name="framerate"       default="30" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+320*104 30fps  /mono
+     <arg name="color_width"     value="320" />  
+     <arg name="color_height"    value="104"  />
+     <arg name="depth_width"     value="320" />
+     <arg name="depth_height"    value="104"  />
+     <arg name="framerate"       default="30" />
+     <arg name="depth_data_type" default="$(arg type_11_bits)" />
+
+
+
+
+
+
