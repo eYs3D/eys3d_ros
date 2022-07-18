@@ -17,7 +17,7 @@ namespace video    {
 // To prevent circular include, factory methods are defined separately here...
 std::unique_ptr<FrameProducer> createColorFrameProducer(libeYs3D::devices::CameraDevice *cameraDevice);
 std::unique_ptr<FrameProducer> createDepthFrameProducer(libeYs3D::devices::CameraDevice *cameraDevice);
-std::unique_ptr<PCProducer> createPCFrameProducer(std::shared_ptr<libeYs3D::devices::CameraDevice> cameraDevice);
+std::unique_ptr<PCProducer> createPCFrameProducer(libeYs3D::devices::CameraDevice *cameraDevice);
 
 } // namespace video
 } // namespace libeYs3D

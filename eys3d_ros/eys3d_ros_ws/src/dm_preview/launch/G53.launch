@@ -24,10 +24,10 @@
      <arg name="module_name" value="$(arg camera)" />
      <!--<arg name="dev_serial_number" value="80625APA00022" />--> <!-- for binding device -->
     
-     <arg name="color_width" value="640" />
-     <arg name="color_height" value="400" />
-     <arg name="depth_width" value="640" />
-     <arg name="depth_height" value="400" />
+     <arg name="color_width" value="320" />
+     <arg name="color_height" value="104" />
+     <arg name="depth_width" value="320" />
+     <arg name="depth_height" value="104" />
      <arg name="framerate" default="30" />
      <arg name="depth_data_type" default="$(arg type_11_bits)" />
      <arg name="color_stream_format" value="$(arg stream_mjpg)" />

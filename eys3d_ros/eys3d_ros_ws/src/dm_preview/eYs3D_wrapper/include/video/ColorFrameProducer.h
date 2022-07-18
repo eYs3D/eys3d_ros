@@ -34,12 +34,11 @@ protected:
     virtual int performInterleave(Frame *frame) override;
     virtual int performAccuracyComputation(Frame *frame) override;
     virtual int performROIComputation(Frame *frame) override;
-    int m_nLastInterLeaveColorSerial;
     
     virtual void checkIMUDeviceCBEnablement() override;
-
+    
     virtual void performSnapshotWork(Frame *frame) override;
-
+    
     virtual void logProducerTick(const char *FMT, ...) override;
     
 protected:

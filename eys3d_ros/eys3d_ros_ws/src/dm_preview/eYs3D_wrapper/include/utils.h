@@ -9,9 +9,6 @@
 #include <stdint.h>
 #include <cstdio>
 #include <ctime>
-#include <iostream>
-#include <chrono>
-#include <thread>
 
 #ifdef WIN32
 #  include <winsock.h>
@@ -73,8 +70,6 @@ void get_time_YYYY_MM_DD_HH_MM_SS(int64_t timeMs, char* date, size_t length);
 int get_model_name(const char *devPath, char *out, int length, const char *log_tag);
 #endif
 USB_PORT_TYPE get_usb_type(const char *devPath);
-
-void reschedule(std::chrono::microseconds us);
 
 #ifdef WIN32
 #define ushort USHORT

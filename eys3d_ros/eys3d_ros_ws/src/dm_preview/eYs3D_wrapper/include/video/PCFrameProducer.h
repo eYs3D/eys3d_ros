@@ -25,7 +25,7 @@ using libeYs3D::devices::CameraDevice;
 // Real implementation of Producer for point cloude
 class PCFrameProducer : public PCProducer   {
 public:
-    friend std::unique_ptr<PCProducer> createPCFrameProducer(std::shared_ptr<CameraDevice> cameraDevice);
+    friend std::unique_ptr<PCProducer> createPCFrameProducer(CameraDevice *cameraDevice);
     virtual ~PCFrameProducer() {}
 
     intptr_t main() final;
@@ -46,7 +46,7 @@ public:
     virtual const char* getName() override    { return "PCFrameProducer"; }
 
 protected:
-    PCFrameProducer(std::shared_ptr<CameraDevice> cameraDevice);
+    PCFrameProducer(CameraDevice *cameraDevice);
     
     bool colorProducerCallback(const Frame* frame);
     bool depthProducerCallback(const Frame* frame);
@@ -62,15 +62,10 @@ private:
     void sendFramesWorker();
     
     // Helper to perform snapshot in another working thread
-    void performSnapshotWork(const         Frame * colorFrame, const Frame * depthFrame);
-
+    void performSnapshotWork(const Frame *colorFrame, const Frame *depthFrame);
 #ifdef WIN32	
 	uint32_t mTimeDeltaMs;
     uint8_t  mFps;
-	int64_t canUseTimeMs = 0;
-	int color_drop_count = 0;
-	int depth_drop_count = 0;
-	std::vector<uint8_t> vGreen;
 #endif    
     int producePCFrame(PCFrame *pcFrame);
 
@@ -88,7 +83,7 @@ private:
     //   1) wait for video frame in mDataQueue
     //   2) process video frame
     //   3) Push frame back to mFreeQueue
-    static constexpr int kMaxFrames = 64;
+    static constexpr int kMaxFrames = 16;
     base::MessageChannel<PCFrame, kMaxFrames> mPCDataQueue;
     base::MessageChannel<PCFrame, kMaxFrames> mPCFreeQueue;
     base::MessageChannel<Frame, kMaxFrames> mColorFrameQueue;
@@ -113,7 +108,7 @@ private:
     int mFrameDumpCount = 0;
     FILE *mFrameLogFile = nullptr;
     
-    std::shared_ptr<CameraDevice> mCameraDevice;
+    CameraDevice *mCameraDevice; // TODO: using c++ smart pointer ?
 
     // for latency performance info
     uint64_t mStartTimeUs = 0llu;

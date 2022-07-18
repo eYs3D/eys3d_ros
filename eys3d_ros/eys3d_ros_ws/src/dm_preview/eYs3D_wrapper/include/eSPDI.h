@@ -174,19 +174,6 @@ PDEVSELINFO pDevSelInfo, bool enable
 */
 int APC_EnableInterleave(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, bool enable);
 
-
-/*! \fn int APC_SetPixelFormat(
-void *pHandleEYSD,
-PDEVSELINFO pDevSelInfo, YUV22_FMT fmt
-)
-\brief enable or disable interleave function
-\param pHandleEYSD	 the pointer to the initilized EYSD SDK instance
-\param pDevSelInfo	pointer of device select index
-\param fmt	set as pxiel format defined in PIXEL_FMT
-\return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_SetPixelFormat(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, PIXEL_FMT fmt);
-
 /*! \fn int APC_SetControlCounterMode(
 void *pHandleEYSD,
 PDEVSELINFO pDevSelInfo,
@@ -308,18 +295,6 @@ int  APC_GetFWRegister(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned shor
 */
 int  APC_SetFWRegister(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
 
-/*! \fn int APC_SetRootCipher(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo,
-        const char* cipher)
-    \brief enter root cipher
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param const char* cipher	cipher string
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_SetRootCipher(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, const char* cipher);
-
 /*! \fn int APC_GetHWRegister(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
@@ -409,73 +384,6 @@ int APC_GetMultiBytesHWRegister(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsi
 int APC_SetMultiBytesHWRegister(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned char *Data, int size, int flag);
 
 
-/*! \fn int APC_GetAETarget(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo,
-        float *EV)
-    \brief set hardware register    \brief set hardware register
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param float *EV	-2.0EV - +3.0EV in 1/3EV step intervals, \n
-        ie [index, EV] => \n
-                         [-6, -2.00EV] \n
-                         [-5, -1.67EV] \n
-                         [-4, -1.33EV] \n
-                         [-3, -1.00EV] \n
-                         [-2, -0.67EV] \n
-                         [-1, -0.33EV] \n
-                         [0, 0.00EV] \n
-                         [1, 0.33EV] \n
-                         [2, 0.67EV] \n
-                         [3, 1.00EV] \n
-                         [4, 1.33EV] \n
-                         [5, 1.67EV] \n
-                         [6, 2.00EV] \n
-                         [7, 2.33EV] \n
-                         [8, 2.67EV] \n
-                         [9, 3.00EV] \n
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_GetAETarget(
-    void *pHandleEYSD,
-    PDEVSELINFO pDevSelInfo,
-    unsigned short *EV);
-
-
-/*! \fn int APC_SetAETarget(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo,
-        int index,
-        float *EV)
-    \brief set hardware register
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param int index	range from -6 to 9, 0 is default AE
-    \param float *EV	-2.0EV - +3.0EV in 1/3EV step intervals, \n
-        ie [index, EV] => \n
-                         [-6, -2.00EV] \n
-                         [-5, -1.67EV] \n
-                         [-4, -1.33EV] \n
-                         [-3, -1.00EV] \n
-                         [-2, -0.67EV] \n
-                         [-1, -0.33EV] \n
-                         [0, 0.00EV] \n
-                         [1, 0.33EV] \n
-                         [2, 0.67EV] \n
-                         [3, 1.00EV] \n
-                         [4, 1.33EV] \n
-                         [5, 1.67EV] \n
-                         [6, 2.00EV] \n
-                         [7, 2.33EV] \n
-                         [8, 2.67EV] \n
-                         [9, 3.00EV] \n
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_SetAETarget(
-    void *pHandleEYSD,
-    PDEVSELINFO pDevSelInfo,
-    int index,
-    float *EV);
 // register APIs -
 
 // File ID +
@@ -567,19 +475,6 @@ int  APC_GetSerialNumber (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned c
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int  APC_SetSerialNumber (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned char* pData, int nLen);
-
-/*! \fn int APC_ResetUNPData(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo)
-    \brief Reset the UNProtection area's datum
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_ResetUNPData(
-    void *pHandleEYSD,
-    PDEVSELINFO pDevSelInfo
-    );
 
 /*! \fn int APC_GetYOffset(
         void *pHandleEYSD,
@@ -1716,35 +1611,7 @@ int APC_SetDepthDataType(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned sh
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int APC_GetDepthDataType(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned short *pValue);
-
-
-/*! \fn APC_SetInterleaveMode(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo,
-        bool enable)
-    \brief set depth data type, 11 bit for disparity data, 14 bit for Z data
-        notice: only PUMA type IC can support this setting
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param bool enable	enable/disable interleave mode
-        see APC_DEPTH_DATA_xxx in eSPDI_def.h
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_SetInterleaveMode(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, bool enable);
-
-/*! \fn int APC_GetInterleaveMode(
-        void *pHandleEYSD,
-        PDEVSELINFO pDevSelInfo,
-        bool *pValue)
-    \brief get current depth data type setting
-    \param void *pHandleEYSD	handle
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param bool *pValue	pointer of enable/disable status in device
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_GetInterleaveMode(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, bool *pValue);
-
-
+// for depth data type selection -
 
 // IR support
 
@@ -2832,14 +2699,4 @@ int APC_PostProcess(void *pPostProcessHandle, unsigned char *pDepthData);
     \return success: APC_OK, others: see eSPDI_def.h
  */
 int APC_ReleasePostProcess(void *pPostProcessHandle);
-
-/*! \fn int APC_SetRootCipher(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, const char* cipher)
-    \brief Set the correct root to do un-protect flash when writing parameters of camera.
-    \param void *pHandleEYSD	 the pointer to the initilized EYSD SDK instance
-    \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param const char* cipher  root
-    \return success: APC_OK, others: see eSPDI_def.h
-*/
-int APC_SetRootCipher(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, const char* cipher);
-
 #endif // LIB_ESPDI_H

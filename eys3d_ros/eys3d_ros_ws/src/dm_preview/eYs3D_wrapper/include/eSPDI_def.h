@@ -153,33 +153,20 @@ typedef enum
 #define SERIAL_2BIT_ADDR    0xf0fe
 // register address define -
 
-typedef enum {
-    YUV22_YUYV_PIXEL_FMT = 0,
-    YUV22_UYVY_PIXEL_FMT,
-    RAW10_GBRG_PIXEL_FMT,
-    RAW10_BGGR_PIXEL_FMT,
-    RAW10_RGGB_PIXEL_FMT,
-    RAW10_GRBG_PIXEL_FMT,
-    MJPEG_PIXEL_FMT,
-    UNKOWN_PIXEL_FMT = 0xffff
-} PIXEL_FMT;
-
-//Check the doc 'video_mode_setting_rul_0.4b.pdf' in http://redmine.etron.com.tw/redmine/issues/6408
 // For Depth Data Type
 #define APC_DEPTH_DATA_OFF_RAW			0 /* raw (depth off, only raw color) */
-#define APC_DEPTH_DATA_DEFAULT			APC_DEPTH_DATA_OFF_RAW /* raw (depth off, only gray raw color) */
+#define APC_DEPTH_DATA_DEFAULT			0 /* raw (depth off, only raw color) */
 #define APC_DEPTH_DATA_8_BITS				1 /* rectify, 1 byte per pixel */
 #define APC_DEPTH_DATA_14_BITS				2 /* rectify, 2 byte per pixel */
 #define APC_DEPTH_DATA_8_BITS_x80			3 /* rectify, 2 byte per pixel but using 1 byte only */
 #define APC_DEPTH_DATA_11_BITS				4 /* rectify, 2 byte per pixel but using 11 bit only */
-#define APC_DEPTH_DATA_OFF_RECTIFY		5 /* rectify (depth off, only rectify raw color) */
+#define APC_DEPTH_DATA_OFF_RECTIFY		5 /* rectify (depth off, only rectify color) */
 #define APC_DEPTH_DATA_8_BITS_RAW			6 /* raw */
 #define APC_DEPTH_DATA_14_BITS_RAW		7 /* raw */
 #define APC_DEPTH_DATA_8_BITS_x80_RAW	8 /* raw */
 #define APC_DEPTH_DATA_11_BITS_RAW		9 /* raw */
 #define APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY     11// 
 #define APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY     13// multi-baseline
-#define APC_DEPTH_DATA_OFF_BAYER_RAW     14
 // For Interleave mode depth data type
 #define APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET 16
 #define APC_DEPTH_DATA_ILM_OFF_RAW			APC_DEPTH_DATA_OFF_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET /* raw (depth off, only raw color) */
@@ -245,11 +232,7 @@ typedef enum {
 #define APC_USER_DATA_FILE_ID_0				200
 #define APC_USER_DATA_FILE_SIZE_0			1024
 #define APC_USER_DATA_FILE_SIZE_1			4096
-#define APC_BACKUP_USER_DATA_FILE_ID        201
-#define APC_BACKUP_USER_DATA_SIZE           1024
-
-
-
+// for Flash Read/Write -
 
 // for device information +
 typedef struct tagDEVINFORMATION {
@@ -292,18 +275,13 @@ typedef struct tagDEVINFORMATION {
 #define APC_PID_AMBER   0x0112
 #define APC_PID_SALLY   0x0158
 #define APC_PID_HYPATIA 0x0160
-#define APC_PID_HYPATIA2 0x0173
 #define APC_PID_8062    0x0162
-#define APC_PID_8063     0x0164
-#define APC_PID_8063_K   0x0165
-#define APC_PID_IVY     0x0177
 #define APC_PID_GRAP    0x0179
 #define APC_PID_GRAP_K  0x0183
 #define APC_PID_GRAP_SLAVE   0x0279
 #define APC_PID_GRAP_SLAVE_K 0x0283
 #define APC_PID_SANDRA  0x0167
 #define APC_PID_NORA  0x0168 //NOTE: http://redmine.etron.com.tw/redmine/issues/6688#change-36410
-#define APC_PID_HELEN  0x0171 //NOTE: http://redmine.etron.com.tw/redmine/issues/6649#note-50
 //+[Thermal device]
 #define APC_PID_GRAP_THERMAL 0xf9f9
 #define APC_PID_GRAP_THERMAL2 0xf8f8
@@ -350,8 +328,7 @@ typedef enum {
     FW_PLUGIN,
     BOOTLOADER_ONLY,
     FW_ONLY,
-    PLUGIN_ONLY,
-    UNP
+    PLUGIN_ONLY
 } FLASH_DATA_TYPE;
 // for total and fw+plugin read/write -
 
@@ -420,7 +397,6 @@ typedef enum {
     APC_SENSOR_TYPE_OV9282 = 10,
     APC_SENSOR_TYPE_H68 = 11,
     APC_SENSOR_TYPE_OV2740 = 12,
-    APC_SENSOR_TYPE_OC0SA10 = 13,
     APC_SENSOR_TYPE_UNKOWN = 0xffff
 } SENSOR_TYPE_NAME; 
 // for Sensor type name -
@@ -480,15 +456,6 @@ typedef enum
 #define PU_PROPERTY_ID_WHITE_BALANCE_CTRL 			10
 #define PU_PROPERTY_ID_WHITE_BALANCE_AUTO_CTRL 	    11
 
-//Auto-Exposure Mode Control
-#define AE_MOD_MANUAL_MODE							0x01
-#define AE_MOD_AUTO_MODE							0x02
-#define AE_MOD_SHUTTER_PRIORITY_MODE				0x04
-#define AE_MOD_APERTURE_PRIORITY_MODE				0x08
-
-// White Balance Temperature, Auto Control
-#define PU_PROPERTY_ID_AWB_DISABLE 	    			0
-#define PU_PROPERTY_ID_AWB_ENABLE 	    			1
 // for Rectify Log +
 
 typedef struct eSPCtrl_RectLogData {
@@ -549,7 +516,6 @@ typedef struct eSPCtrl_RectLogData {
 			float			RECT_AvgErr;/**< Reprojection error */
 			unsigned short	nLineBuffers;/**< Linebuffer for Hardware limitation < 60 */
             float ReProjectMat[16];
-            float K6Ratio; //Ratio for distortion K6
 		};
 	};
 } eSPCtrl_RectLogData;
@@ -699,7 +665,6 @@ struct APCImageType
         COLOR_YUY2 = 0,
         COLOR_RGB24,
         COLOR_MJPG,
-        COLOR_UYVY,
         DEPTH_8BITS = 100,
         DEPTH_8BITS_0x80,
         DEPTH_11BITS,
@@ -768,14 +733,6 @@ struct APCImageType
         }
     }
 };
-/**
- * @param M_dst input camera matrix of RGB-lens, including intrinsic parameters, such as RectifyLog-CamMat2 (M3).
- *              The buffer size is 9.
- * @param R_dst_to_src input rotation matrix of dst-lens to src-lens, dst is the camera at left side, src is the camera at
- *                     right side, such as RectifyLog-RotaMat (R31). The buffer size is 9.
- * @param T_dst_to_src  input translation matrix of dst-lens to src-lens, such as RectifyLog-TranMat (T13).
- *                     The buffer size is 3.
- */
 
 struct PointCloudInfo
 {
@@ -786,13 +743,9 @@ struct PointCloudInfo
     float disparityToW[ 2048 ];
     int   disparity_len;
     WORD  wDepthType;
-    int depth_image_edian; //0: lillte-edian, 1: big-edia
-    //multi-lens data
+//multi-lens data
     float focalLength_K;
     float baseline_K;
     float diff_K;
-    float slaveDeviceCamMat2[9];
-    float slaveDeviceRotaMat[9];
-    float slaveDeviceTranMat[3];
 };
 #endif // LIB_ESPDI_DEF_H

@@ -59,46 +59,61 @@ public:
         COLOR_BGR24
     };
     COLOR_BYTE_ORDER mColorByteOrder;
+    static std::shared_ptr<EYS3DSystem> getEYS3DSystem();
+    static std::shared_ptr<EYS3DSystem> getEYS3DSystemRGBOrder(COLOR_BYTE_ORDER colorByteOrder);
 
     int getCameraDeviceCount()    { return mDeviceCount; }
     std::shared_ptr<CameraDevice> getCameraDevice(int index);
-    static void *getEYS3DDIHandle();
+    void *getEYS3DDIHandle();
 	int getDeviceCount();
 
-    static uint8_t generateModelID();
+    std::vector<std::string> getHIDDeviceList(uint16_t nVID, uint16_t nPID);
+    uint8_t generateModelID();
     
     void dumpSystemInfo();
 
-    static char *getSDKHomePath();
-    static char *getHomePath();
-    static char *getLogPath();
-    static char *getFramePath();
-    static char *getVideoRecordingPath();
-    static char *getSnapshotPath();
-    static char *getIMULogPath();
-    static char *getReadRegisterLogsPath();
+    const char *getSDKHomePath();
+    const char *getHomePath() const   { return mHomePath; }
+    const char *getLogPath() const   { return mLogPath; }
+    const char *getFramePath() const    { return mFramePath; }
+    const char *getVideoRecordingPath() const    { return mVideoRecordingPath; }
+    const char *getSnapshotPath() const    { return mSnapshotPath; }
+    const char *getIMULogPath() const    { return mIMULogPath; }
+    const char *getReadRegisterLogsPath() const {return mReadRegisterLogsPath;}
     
-    static int getFPSWindowSize();
-
-    explicit EYS3DSystem();
-    explicit EYS3DSystem(COLOR_BYTE_ORDER colorByteOrder);
-	
+    int getFPSWindowSize()    { return mFPSWindowSize; }
+    
     virtual ~EYS3DSystem();
 
-	static void initHID();
-	static void clearHID();
-	static std::vector<std::string> getHIDDeviceList(uint16_t nVID, uint16_t nPID);
-
-	int initialize();
-
 private:
+    explicit EYS3DSystem();
+    explicit EYS3DSystem(COLOR_BYTE_ORDER colorByteOrder);
 
+    int initialize();
     int createEYS3DHome();
 
-private:
+    void initHID();
+    void clearHID();
 
+private:
+    static std::shared_ptr<EYS3DSystem> sEYS3DSystem;
+
+    void *mEYS3DDIHandle;
     int mDeviceCount;
     std::map<DeviceSellectInfo, std::shared_ptr<CameraDevice>>mDeviceMap;
+
+    std::map<std::pair<uint16_t, uint16_t>, std::vector<std::string>> mHidDeviceMap;
+    
+    char mSDKHomePath[PATH_MAX];
+    char mHomePath[PATH_MAX];
+    char mLogPath[PATH_MAX];
+    char mFramePath[PATH_MAX];
+    char mVideoRecordingPath[PATH_MAX];
+    char mSnapshotPath[PATH_MAX];
+    char mIMULogPath[PATH_MAX];
+    char mReadRegisterLogsPath[PATH_MAX];
+    
+    int mFPSWindowSize;
 
 };
 
