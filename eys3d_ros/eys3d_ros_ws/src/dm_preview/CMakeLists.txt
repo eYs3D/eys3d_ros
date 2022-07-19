@@ -145,7 +145,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 
-set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/" 
+set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/"
+                             "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/eSPDI/"
                              "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/DMPreview_utility/"
                              "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/devices/controller/")
 message("eys3d_depth_INCLUDE_DIRS= ${eys3d_depth_INCLUDE_DIRS}")
@@ -156,7 +157,14 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${eys3d_depth_INCLUDE_DIRS}
 )
-set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/libeys3d.so")
+
+if(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+  set(ESPDI_PLATFORM_NAME X86_64)
+elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "aarch64")
+  set(ESPDI_PLATFORM_NAME NVIDIA_64)
+endif()
+
+set(eys3d_depth_LIB "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/libeys3d.${ESPDI_PLATFORM_NAME}.so")
 
 set(LINK_LIBRARIES
   ${catkin_LIBRARIES}
@@ -207,7 +215,7 @@ target_link_libraries(dm_preview_imu_listener ${LINK_LIBRARIES})
 
 add_custom_command(TARGET dm_preview POST_BUILD 
     COMMAND 
-    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/*.* ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
+    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/lib/* ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/
     )
 
 #add_custom_command(TARGET dm_preview POST_BUILD 
@@ -217,8 +225,10 @@ add_custom_command(TARGET dm_preview POST_BUILD
 
 add_custom_command(TARGET dm_preview POST_BUILD 
     COMMAND 
-    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_config/ ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/dm_preview/eYs3D/
+    cp -r ${CMAKE_SOURCE_DIR}/dm_preview/eYs3D_wrapper/eYs3D/ ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/dm_preview/eYs3D/
     )
+
+
 
 #############
 ## Install ##
