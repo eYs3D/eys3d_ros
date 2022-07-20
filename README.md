@@ -3,6 +3,14 @@
 eYs3D ROS SDK is a toolkit for eYs3D Depth camera module.
 
 ----------
+## Clone this project
+
+* `git clone git@github.com:eYs3D/eys3d_ros.git --recurse-submodules`
+----------
+## Update submodule projects
+
+* `git submodule update --init --recursive`
+----------
 
 ## Support platforms
 
