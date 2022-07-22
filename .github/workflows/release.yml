@@ -1,0 +1,59 @@
+# https://github.com/actions/create-release
+# https://github.com/actions/upload-release-asset
+name: draft-release
+
+on:
+  push:
+    tags:
+      - 'v*'
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Get custom tarball name
+        id: get_tarball_name
+        run: echo ::set-output name=TARBALL_NAME::${{ github.ref_name }}
+
+      - name: Get archived folder name for custom tarball
+        id: get_archived_folder_name
+        run: echo ::set-output name=ARCHIVED_FOLDER::${{ github.repository_owner }}-$(git rev-parse --short HEAD)
+      - name: Shell PWD Sync submodules
+        run: |
+          pwd
+          ls -al
+      - name: Create custom tarball artifact
+        run: |
+          cd ../
+          mkdir -p artifacts
+          tar czvf artifacts/${{ steps.get_tarball_name.outputs.TARBALL_NAME }}.tar.gz --exclude-vcs ./${{ github.event.repository.name }}
+          
+      - name: Create draft release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload TAR.GZ release asset
+        id: upload-tar-gz-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ../artifacts/${{ steps.get_tarball_name.outputs.TARBALL_NAME }}.tar.gz
+          asset_name: ${{ steps.get_tarball_name.outputs.TARBALL_NAME }}.tar.gz
+          asset_content_type: application/gzip
