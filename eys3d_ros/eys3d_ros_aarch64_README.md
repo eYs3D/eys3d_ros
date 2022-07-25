@@ -8,9 +8,9 @@ eYs3D ROS SDK is a toolkit for eYs3D Depth camera module.
 
 * Support ARM aarch64 (64-bit)
 * Tested on NVIDIA Jetson series, with Ubuntu 18.04 (GCC 7.5)
-* Currently only YX8062 camera module supports IMU function
 * Supports ROS Melodic on Ubuntu 18.04
 * Supports ROS 1.0
+* Currently only YX8062 camera module supports IMU function
 
 ----------
 
