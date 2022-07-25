@@ -50,25 +50,26 @@ The following instructions are written for ROS Melodic on Ubuntu 18.04
 ## Usage Instructions
 
  - **Start the eYs3D depth camera node**
- 1. Build any packages located in eys3d_ros/eys3d_ros_ws/src:
+ 1. Build any packages located in eys3d_ros_ws/src:
  
-    `cd eys3d_ros/eys3d_ros_ws; catkin_make; cd ..`
+    `cd eys3d_ros_ws; catkin_make; cd ..`
  
- 2. After sourcing your setup bash using:  
+ 2. sourcing your workspace environment using:  
 
-    `source ../eys3d_ros/eys3d_ros_ws/devel/setup.bash`
+    `source eys3d_ros_ws/devel/setup.bash`
 
- 3. Modify the 'display.launch' file based on the module information:  
-    The launch file located in "eys3d_ros/eys3d_ros_ws/src/launch"  
-    Please fill in the module's serial number in value field.  
-    for example:  
-     ` <arg name="dev_serial_number" value="8036D000000001" />  ` 
-    
- 4. Create terminal and type below command:  
+ 3. Create terminal and type below command depends on which camera you use :  
 
-    `roslaunch dm_preview display.launch`  
-        
- > This will stream all camera sensors and publish on the appropriate ROS topics. Other stream resolutions and frame rates can optionally be provided as parameters to the 'dm_preview.launch' file.  
+    `roslaunch dm_preview G100.launch`  
+    `roslaunch dm_preview G53.launch`  
+    `roslaunch dm_preview G50.launch`  
+    `roslaunch dm_preview R50.launch`  
+
+ 4. Other stream resolutions and framerate for each camera, please see `videomode reference` folder, By change the parameter inside camera launch file.  
+
+ 5. For binding device. After launch your camera. `Serial Number` will be shown inside the terminal info. Check `dev_serial_number`parameter in the launch file. Delete annotation and change the device serial number.
+
+ 6. For multiple cameras usage. please reference `muti_camera_reference.launch`.  
 
  - **Set Camera Controls Using Dynamic Reconfigure Params**
  
@@ -97,7 +98,7 @@ The following instructions are written for ROS Melodic on Ubuntu 18.04
     /dm_preview/imu/data_raw  
     
     /dm_preview/imu/data_raw_processed  
-    
+
 ----------
 ## Use eYs3D camera module with rtabmap_ros package to generate SLAM (Optional)
 - The rtabmap_ros package can be used to generate a 3D point clouds of the environment and/or to create a 2D occupancy grid map for navigation.
