@@ -508,6 +508,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_YUY2 :
           libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_MJPG;
 
+      device_->enableExtendIR(true);
       libeYs3D::devices::IRProperty property = device_->getIRProperty();
       property.setIRValue(params_.ir_intensity_);
       device_->setIRProperty(property);
