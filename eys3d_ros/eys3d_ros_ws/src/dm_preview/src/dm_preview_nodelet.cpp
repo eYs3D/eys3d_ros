@@ -211,7 +211,13 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   bool depth_image_callback(const libeYs3D::video::Frame *frame) {
       
       if (0 == pub_depth.getNumSubscribers()) return true;
-
+      static int count = 0;
+      count++;
+      if (count == 100) {
+        int retReg = device_->adjustRegisters();
+        fprintf(stderr, "adjustRegisters %d \n", retReg);
+        NODELET_INFO_STREAM("adjustRegisters reason : " << retReg);
+      }
       auto timestamp = compatibleTimestamp(frame->serialNumber);
 
       sensor_msgs::CameraInfoPtr info;
