@@ -83,7 +83,6 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   sensor_msgs::CameraInfoPtr depth_info_ptr;
 
   sensor_msgs::PointCloud2 point_msg;
-  std::shared_ptr<sensor_msgs::PointCloud2Modifier> point_modifier;
 
   std::string left_color_frame_id;
   std::string right_color_frame_id;
@@ -257,42 +256,34 @@ class DMPreviewNodelet : public nodelet::Nodelet {
 
   bool pc_frame_callback(const libeYs3D::video::PCFrame *pcFrame) {
 
-      //sensor_msgs::PointCloud2Iterator<float> iter_x(point_msg, "x");
-      //sensor_msgs::PointCloud2Iterator<uint8_t> iter_rgb(point_msg, "rgb");
-      
+      point_msg.width = pcFrame->width;
+      point_msg.height = pcFrame->height;
+      point_msg.is_dense = true;
+      point_msg.header.frame_id = points_frame_id;
+      auto point_modifier = sensor_msgs::PointCloud2Modifier(point_msg);
+      point_modifier.setPointCloud2Fields(
+              3, "x", 1, sensor_msgs::PointField::FLOAT32, "y", 1,
+              sensor_msgs::PointField::FLOAT32, "z", 1,
+              sensor_msgs::PointField::FLOAT32);
+
+      point_modifier.setPointCloud2FieldsByString(1, "xyz");
       sensor_msgs::PointCloud2Iterator<float> iter_x(point_msg, "x");
-      //sensor_msgs::PointCloud2Iterator<float> iter_y(point_msg, "y");
-      //sensor_msgs::PointCloud2Iterator<float> iter_z(point_msg, "z");
 
+      unsigned int valid_count = 0;
       for (int index = 0; index < point_msg.width * point_msg.height; ++index) {
-           
-           
+          if (pcFrame->xyzDataVec[index * 3 + 2] > 0) {
+              iter_x[1] = -(pcFrame->xyzDataVec[index * 3] / 1000.0f);
+              iter_x[2] = -(pcFrame->xyzDataVec[index * 3 + 1] / 1000.0f);
+              iter_x[0] = pcFrame->xyzDataVec[index * 3 + 2] / 1000.0f;
 
-
-          iter_x[1] = -(pcFrame->xyzDataVec[index * 3] / 1000.0f);
-          iter_x[2] = -(pcFrame->xyzDataVec[index * 3 + 1] / 1000.0f);
-          iter_x[0] = pcFrame->xyzDataVec[index * 3 + 2] / 1000.0f;
-
-          //iter_rgb[2] = pcFrame->rgbDataVec[index * 3 + 2];
-          //iter_rgb[1] = pcFrame->rgbDataVec[index * 3 + 1];
-          //iter_rgb[0] = pcFrame->rgbDataVec[index * 3];
-          
-          
-
-          ++iter_x; 
-          //++iter_rgb;
-
-          //iter_y[0] = -(pcFrame->xyzDataVec[(index) * 3] / 1000.0f);     //rviz x
-          //iter_z[0] = -(pcFrame->xyzDataVec[(index) * 3 + 1] / 1000.0f); //rviz y
-          //iter_x[0] = pcFrame->xyzDataVec[(index) * 3 + 2] / 1000.0f;    //rviz z
-          
-          //++iter_y; 
-          //++iter_z;
-          //++iter_x; 
+              ++iter_x;
+              ++valid_count;
+          }
       }
 
-      
-
+      point_modifier.resize(valid_count);
+      point_msg.width = valid_count;
+      point_msg.height = 1;
       point_msg.header.stamp = ros::Time().now();
       pub_points.publish(point_msg);
 
@@ -486,29 +477,6 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           exit(-1);
       }
 
-      point_msg.width = params_.depth_width_;
-      point_msg.height = params_.depth_height_;
-      point_msg.is_dense = true;
-      point_msg.header.frame_id = points_frame_id;
-
-      //sensor_msgs::PointCloud2Modifier point_modifier(point_msg);
-      //point_modifier.setPointCloud2FieldsByString(1, "xyz");
-      //point_modifier.resize(point_msg.height * point_msg.width);
-
-      
-
-      point_modifier =
-          std::make_shared<sensor_msgs::PointCloud2Modifier>(point_msg);
-      point_modifier->setPointCloud2Fields(
-          3, "x", 1, sensor_msgs::PointField::FLOAT32, "y", 1,
-          sensor_msgs::PointField::FLOAT32, "z", 1,
-          sensor_msgs::PointField::FLOAT32);
-
-      
-      
-      //point_modifier->setPointCloud2FieldsByString(1, "xyz");
-      //point_modifier->setPointCloud2FieldsByString(2, "xyz", "rgb");
-
       libeYs3D::video::COLOR_RAW_DATA_TYPE color_type = 
           Color_YUYV == params_.color_stream_format_ ?
           libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_YUY2 :
@@ -532,6 +500,13 @@ class DMPreviewNodelet : public nodelet::Nodelet {
               libeYs3D::devices::CameraDeviceProperties::EXPOSURE_TIME,
               params_.exposure_time_step_);
       }
+
+      auto& processOptions = device_->getPostProcessOptions();
+        processOptions.enable(true);
+        processOptions.setSpatialOutlierThreshold(10);
+        processOptions.setSpatialFilterKernelSize(5); // Should be odd number
+        processOptions.setDecimationFactor(2);
+        device_->setPostProcessOptions(processOptions);
 
       int ret = device_->initStream(
           color_type, params_.color_width_, params_.color_height_,
