@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Stream format -->
+  <arg name="stream_mjpg"       default="0" />
+  <arg name="stream_yuyv"       default="1" />
+
+  <arg name="pi"   value="3.1415926535897932" />
+  <arg name="pi/2" value="1.5707963267948966" />
+  <arg name="base_frame" value="dm_base_frame" />
+  <arg name="type_color_only"           default="0" />
+  
+  <arg name="type_8_bits"               default="1" />
+  <arg name="type_14_bits"              default="2" />
+  <arg name="type_11_bits"              default="4" />
+  <arg name="type_11_bits_interleave_mode"         default="20" />
+  <arg name="type_11_bits_scale_down"              default="36" />
+
+  <!-- set 'true' if only one device, otherwise set 'false' -->
+  <arg name="single_module" value="false" />
+
+  <!-- please set the related parameters based on the module information for single module -->
+  <group if="$(arg single_module)">
+    <arg name="camera" value="8071" />
+    <arg name="tf_prefix" value="$(arg camera)" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="$(arg camera)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    <arg name="dev_serial_number" value="80710A18100023" />
+    <arg name="color_width" value="320" />
+    <arg name="color_height" value="104" />
+    <arg name="depth_width" value="320" />
+    <arg name="depth_height" value="104" />
+    <arg name="depth_maximum_mm" value="1000" />
+    <arg name="framerate" default="30" />
+    <arg name="depth_data_type" default="$(arg type_11_bits)" />
+    <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+    <arg name="ir_intensity" default="48" />
+    </include>
+
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud__broadcaster"
+        args="0 0.015 0 0 0 0 $(arg base_frame) $(arg tf_prefix)_points_frame 30" />
+  </group>
+
+  <!-- please set the related parameters based on the module information for multi modules -->
+  <group unless="$(arg single_module)">
+    <arg name="camera1" value="G53_1" />
+    <arg name="camera2" value="G53_2" />
+    <arg name="tf_prefix1" value="$(arg camera1)" />
+    <arg name="tf_prefix2" value="$(arg camera2)" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="$(arg camera1)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix1)" />
+    <arg name="dev_serial_number" value="80710A18100023" />
+    <arg name="color_width" value="320" />
+    <arg name="color_height" value="104" />
+    <arg name="depth_width" value="320" />
+    <arg name="depth_height" value="104" />
+    <arg name="depth_maximum_mm" value="1000" />
+    <arg name="framerate" default="30" />
+    <arg name="depth_data_type" default="$(arg type_11_bits)" />
+    <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+    <arg name="ir_intensity" default="48" />
+    </include>
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+    <arg name="module_name" value="$(arg camera2)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix2)" />
+    <arg name="dev_serial_number" value="80710AAF100039" />
+    <arg name="color_width" value="320" />
+    <arg name="color_height" value="104" />
+    <arg name="depth_width" value="320" />
+    <arg name="depth_height" value="104" />
+    <arg name="depth_maximum_mm" value="1000" />
+    <arg name="framerate" default="30" />
+    <arg name="depth_data_type" default="$(arg type_11_bits)" />
+    <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+    <arg name="ir_intensity" default="48" />
+    </include>
+
+    <node pkg="tf" type="static_transform_publisher" name="G53_1_point_cloud__broadcaster"
+        args="0 0.015 0 0 0 0 $(arg base_frame) $(arg tf_prefix1)_points_frame 30" />
+    <node pkg="tf" type="static_transform_publisher" name="G53_2_point_cloud__broadcaster"
+        args="0 -0.015 0 0 0 0 $(arg base_frame) $(arg tf_prefix2)_points_frame 30" />
+  </group>
+
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dm_preview)/rviz/2_G53.rviz" output="screen"/>
+</launch>
