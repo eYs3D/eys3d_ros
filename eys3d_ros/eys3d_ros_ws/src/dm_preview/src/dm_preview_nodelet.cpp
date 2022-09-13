@@ -253,14 +253,14 @@ class DMPreviewNodelet : public nodelet::Nodelet {
 
       //sensor_msgs::PointCloud2Iterator<float> iter_x(point_msg, "x");
       //sensor_msgs::PointCloud2Iterator<uint8_t> iter_rgb(point_msg, "rgb");
-      
+
       sensor_msgs::PointCloud2Iterator<float> iter_x(point_msg, "x");
       //sensor_msgs::PointCloud2Iterator<float> iter_y(point_msg, "y");
       //sensor_msgs::PointCloud2Iterator<float> iter_z(point_msg, "z");
 
       for (int index = 0; index < point_msg.width * point_msg.height; ++index) {
-           
-           
+
+
 
 
           iter_x[1] = -(pcFrame->xyzDataVec[index * 3] / 1000.0f);
@@ -270,22 +270,22 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           //iter_rgb[2] = pcFrame->rgbDataVec[index * 3 + 2];
           //iter_rgb[1] = pcFrame->rgbDataVec[index * 3 + 1];
           //iter_rgb[0] = pcFrame->rgbDataVec[index * 3];
-          
-          
 
-          ++iter_x; 
+
+
+          ++iter_x;
           //++iter_rgb;
 
           //iter_y[0] = -(pcFrame->xyzDataVec[(index) * 3] / 1000.0f);     //rviz x
           //iter_z[0] = -(pcFrame->xyzDataVec[(index) * 3 + 1] / 1000.0f); //rviz y
           //iter_x[0] = pcFrame->xyzDataVec[(index) * 3 + 2] / 1000.0f;    //rviz z
-          
-          //++iter_y; 
+
+          //++iter_y;
           //++iter_z;
-          //++iter_x; 
+          //++iter_x;
       }
 
-      
+
 
       point_msg.header.stamp = ros::Time().now();
       pub_points.publish(point_msg);
@@ -489,7 +489,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
       //point_modifier.setPointCloud2FieldsByString(1, "xyz");
       //point_modifier.resize(point_msg.height * point_msg.width);
 
-      
+
 
       point_modifier =
           std::make_shared<sensor_msgs::PointCloud2Modifier>(point_msg);
@@ -498,12 +498,12 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           sensor_msgs::PointField::FLOAT32, "z", 1,
           sensor_msgs::PointField::FLOAT32);
 
-      
-      
+
+
       //point_modifier->setPointCloud2FieldsByString(1, "xyz");
       //point_modifier->setPointCloud2FieldsByString(2, "xyz", "rgb");
 
-      libeYs3D::video::COLOR_RAW_DATA_TYPE color_type = 
+      libeYs3D::video::COLOR_RAW_DATA_TYPE color_type =
           Color_YUYV == params_.color_stream_format_ ?
           libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_YUY2 :
           libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_MJPG;
@@ -525,6 +525,13 @@ class DMPreviewNodelet : public nodelet::Nodelet {
               libeYs3D::devices::CameraDeviceProperties::EXPOSURE_TIME,
               params_.exposure_time_step_);
       }
+
+      auto& processOptions = device_->getPostProcessOptions();
+        processOptions.enable(true);
+        processOptions.setSpatialOutlierThreshold(10);// Smaller filter more points.
+        processOptions.setSpatialFilterKernelSize(5); // Should be odd number for filter kernel size.
+        processOptions.setDecimationFactor(1);        // Ceil(resolution / factor / 4) * 4 will = resized resolution
+        device_->setPostProcessOptions(processOptions);
 
       int ret = device_->initStream(
           color_type, params_.color_width_, params_.color_height_,
