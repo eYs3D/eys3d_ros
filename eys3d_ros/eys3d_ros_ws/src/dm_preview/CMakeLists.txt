@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(dm_preview)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -146,6 +146,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 
 set(eys3d_depth_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/"
+                             "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/devices/model"
                              "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/lib/eSPDI/"
                              "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/DMPreview_utility/"
                              "${PROJECT_SOURCE_DIR}/eYs3D_wrapper/include/devices/controller/")
