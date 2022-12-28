@@ -1,4 +1,4 @@
-# **eYs3D ROS SDK**
+# **eYs3D ROS SDK (eYsGlobe)**
 
 eYs3D ROS SDK is a toolkit for eYs3D Depth camera module.
 ----------
