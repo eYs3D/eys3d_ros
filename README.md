@@ -6,6 +6,7 @@ eYs3D dm_preview is a package for eYs3D Depth camera module.
 ## Clone this project
 
 * `git clone https://github.com/eYs3D/eys3d_ros.git`
+* `Copy dm_preview folder to your workspace/src`
 ----------
 
 ## Support platforms
