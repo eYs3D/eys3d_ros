@@ -1,0 +1,15 @@
+1. L'+D     color_1280x720_YUYV  depth_1280x720  60fps       interleave
+2. L'+D     color_1280x720_YUYV  depth_1280x720  60,30,10fps
+3. L'+D     color_1280x720_YUYV  depth_640x360   30,15,10fps
+4. L+D      color_1280x720_YUYV  depth_1280x720  60,30,10fps
+5. L'+R'+D  color_2560x720_YUYV  depth_1280x720  30fps
+6. L+R+D    color_2560x720_YUYV  depth_1280x720  30fps
+7. D        color_0x0            depth_1280x720  60,30,10fps
+8. D        color_0x0            depth_640x360   30,15,10fps
+9. L+R      color_2560x960_YUYV  depth_0x0       30fps
+10.L+R      color_2560x720_YUYV  depth_0x0       30fps
+11.L'+R'    color_2560x720_YUYV  depth_0x0       60,30fps
+
+
+' = Rectify Color image
+interleave = helf fps, color without IR dot

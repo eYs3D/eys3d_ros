@@ -1,0 +1,11 @@
+1. L'+D     color_640x480__MJPEG  depth_640x480  25fps
+2. L'+D     color_320x240__MJPEG  depth_320x240  30fps
+3. L'+R'+D  color_1280x480_MJPEG  depth_640x480  25fps
+4. L'+R'+D  color_640x240__MJPEG  depth_320x240  30fps
+5. L'+R'+D  color_1280x480_YUYV   depth_640x480  10fps
+6. L'+R'+D  color_640x240__YUYV   depth_320x240  10fps
+7. L+R      color_1280x480_YUYV   depth_0x0      10fps
+8. L+R      color_640x240__YUYV   depth_0x0      10fps
+9. L+R+D    color_1280x480_YUYV   depth_640x480  10fps
+
+' = Rectify Color image

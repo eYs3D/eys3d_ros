@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Stream format -->
+  <arg name="base_frame" value="dm_base_frame" />
+
+  <!-- Stream format -->
+  <arg name="stream_mjpg"       default="0" />
+  <arg name="stream_yuyv"       default="1" />
+  
+  <!-- depth type -->
+  <arg name="depth_raw"               default="0" />
+  <arg name="depth_gray"              default="1" />
+  <arg name="depth_colorful"          default="2" />
+  
+  <!-- vedio mode type -->
+  <arg name="raw_color"                       default="0" /><!--only raw color without rectify-->
+  <arg name="rect_color_and_depth"            default="4" /><!--rectify color and depth-->
+  <arg name="rect_color"                      default="5" /><!--only rectify color-->
+  <arg name="raw_color_and_depth"             default="9" /><!--raw color and depth-->
+  <arg name="rect_color_and_depth_interleave" default="20"/><!--half fps but color without IR dot-->
+  <arg name="rect_color_and_scale_down_depth" default="36"/><!--half depth resolution-->
+  <arg name="rect_color_and_scale_down_depth_interleave" default="52"/><!--half depth resolution and interleave-->
+
+  <!-- color mode type -->
+  <arg name="color_Left" default="0" />
+  <arg name="color_Left_Right" default="1" />
+
+  
+  <arg name="camera1" value="G50" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera1)" />
+     <arg name="tf_prefix" value="$(arg camera1)" />
+     <arg name="color_mode" default="$(arg color_Left_Right)" /> 
+     <arg name="color_width" value="2560" />
+     <arg name="color_height" value="960" />
+     <arg name="depth_width" value="0" />
+     <arg name="depth_height" value="0" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg raw_color)" />
+     <arg name="color_stream_format" value="$(arg stream_yuyv)" />
+     <arg name="depth_maximum_mm" value="1500" />    
+     <arg name="ir_intensity" default="0" />         
+     <arg name="colorful_pointcloud" value="false" /><!-- set true will increase loading,rviz need resubscribe topic-->
+     <arg name="enable_depth_decimation_filter" value="false" /><!--scale down depth and point cloud's density,reduce loading-->
+     <arg name="depth_decimation_filter_rate" value="2" /> <!--must set 2,4,8,16...-->
+    </include>
+    
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera1)_broadcaster"
+        args="0 0.03 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera1)_left_color_frame 30" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dm_preview)/rviz/G50.rviz" output="screen"/>
+</launch>

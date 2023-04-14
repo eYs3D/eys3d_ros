@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Stream format -->
+  <arg name="base_frame" value="dm_base_frame" />
+
+  <!-- Stream format -->
+  <arg name="stream_mjpg"       default="0" />
+  
+  <!-- depth type -->
+  <arg name="depth_raw"               default="0" />
+  <arg name="depth_gray"              default="1" />
+  <arg name="depth_colorful"          default="2" />
+  
+  <!-- vedio mode type -->
+  <arg name="rect_color_and_scale_down_depth" default="36"/><!--half depth resolution-->
+
+  
+  <arg name="camera1" value="BMVM0S30A1" />
+  <arg name="camera2" value="BMVM0S30A2" />
+  <arg name="camera3" value="BMVM0S30A3" />
+  <arg name="camera4" value="BMVM0S30A4" />
+  <arg name="camera5" value="BMVM0S30A5" />
+
+  <arg name="camera1sn" value="00000001" />
+  <arg name="camera2sn" value="00000002" />
+  <arg name="camera3sn" value="00000003" />
+  <arg name="camera4sn" value="00000004" />
+  <arg name="camera5sn" value="00000005" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera1)" />
+     <arg name="tf_prefix" value="$(arg camera1)" />
+     <!--<arg name="dev_serial_number" value="$(arg camera1sn)" />-->
+     <arg name="color_width" value="1280" />
+     <arg name="color_height" value="920" />
+     <arg name="depth_width" value="640" />
+     <arg name="depth_height" value="460" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg rect_color_and_scale_down_depth)" />
+     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+     <arg name="depth_maximum_mm" value="1500" />    
+     <arg name="ir_intensity" default="3" />         
+     <arg name="colorful_pointcloud" value="false" /><!-- set true will increase loading,rviz need resubscribe topic-->
+     <arg name="enable_depth_decimation_filter" value="false" /><!--scale down depth and point cloud's density,reduce loading-->
+     <arg name="depth_decimation_filter_rate" value="2" /> <!--must set 2,4,8,16...-->
+    </include>
+    
+
+
+    <!--<include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera2)" />
+     <arg name="tf_prefix" value="$(arg camera2)" />
+     <arg name="dev_serial_number" value="$(arg camera2sn)" />
+     <arg name="color_width" value="1280" />
+     <arg name="color_height" value="920" />
+     <arg name="depth_width" value="640" />
+     <arg name="depth_height" value="460" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg rect_color_and_scale_down_depth)" />
+     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+     <arg name="depth_maximum_mm" value="1500" />    
+     <arg name="ir_intensity" default="3" />         
+     <arg name="colorful_pointcloud" value="false" />
+     <arg name="enable_depth_decimation_filter" value="false" />
+     <arg name="depth_decimation_filter_rate" value="2" />
+    </include>
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera3)" />
+     <arg name="tf_prefix" value="$(arg camera3)" />
+     <arg name="dev_serial_number" value="$(arg camera3sn)" />
+     <arg name="color_width" value="1280" />
+     <arg name="color_height" value="920" />
+     <arg name="depth_width" value="640" />
+     <arg name="depth_height" value="460" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg rect_color_and_scale_down_depth)" />
+     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+     <arg name="depth_maximum_mm" value="2000" />    
+     <arg name="ir_intensity" default="3" />         
+     <arg name="colorful_pointcloud" value="false" />
+     <arg name="enable_depth_decimation_filter" value="false" />
+     <arg name="depth_decimation_filter_rate" value="2" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera4)" />
+     <arg name="tf_prefix" value="$(arg camera4)" />
+     <arg name="dev_serial_number" value="$(arg camera4sn)" />
+     <arg name="color_width" value="1280" />
+     <arg name="color_height" value="920" />
+     <arg name="depth_width" value="640" />
+     <arg name="depth_height" value="460" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg rect_color_and_scale_down_depth)" />
+     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+     <arg name="depth_maximum_mm" value="2000" />    
+     <arg name="ir_intensity" default="3" />         
+     <arg name="colorful_pointcloud" value="false" />
+     <arg name="enable_depth_decimation_filter" value="false" />
+     <arg name="depth_decimation_filter_rate" value="2" />
+
+    <include file="$(find dm_preview)/launch/dm_preview.launch">
+     <arg name="module_name" value="$(arg camera5)" />
+     <arg name="tf_prefix" value="$(arg camera5)" />
+     <arg name="dev_serial_number" value="$(arg camera5sn)" />
+     <arg name="color_width" value="1280" />
+     <arg name="color_height" value="920" />
+     <arg name="depth_width" value="640" />
+     <arg name="depth_height" value="460" />
+     <arg name="framerate" default="30" />
+     <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="video_mode_type" default="$(arg rect_color_and_scale_down_depth)" />
+     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
+     <arg name="depth_maximum_mm" value="2000" />    
+     <arg name="ir_intensity" default="3" />         
+     <arg name="colorful_pointcloud" value="false" />
+     <arg name="enable_depth_decimation_filter" value="false" />
+     <arg name="depth_decimation_filter_rate" value="2" />
+    </include>-->
+  
+    
+
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera1)_broadcaster"
+        args="0 0.03 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera1)_left_color_frame 30" />
+    <!--<node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera2)_broadcaster"
+        args="0 0.53 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera2)_left_color_frame 30" />
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera3)_broadcaster"
+        args="0 1.03 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera3)_left_color_frame 30" />
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera4)_broadcaster"
+        args="0 1.03 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera4)_left_color_frame 30" />
+    <node pkg="tf" type="static_transform_publisher" name="point_cloud_$(arg camera5)_broadcaster"
+        args="0 1.03 0 -1.57 0 -1.57 $(arg base_frame) $(arg camera5)_left_color_frame 30" />-->
+  
+
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dm_preview)/rviz/BMVM0S30A.rviz" output="screen"/>
+</launch>
