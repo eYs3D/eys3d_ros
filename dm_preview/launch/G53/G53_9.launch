@@ -38,6 +38,7 @@
      <arg name="framerate" default="15" />
      <arg name="depth_type" default="$(arg depth_gray)" />
      <arg name="video_mode_type" default="$(arg raw_color)" />
+     <arg name="zd_tbl_index" default="2" />
      <arg name="color_stream_format" value="$(arg stream_yuyv)" />
      <arg name="depth_maximum_mm" value="1000" />    
      <arg name="ir_intensity" default="0" />         

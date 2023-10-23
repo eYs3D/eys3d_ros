@@ -73,6 +73,7 @@ std::ostream &operator<<(std::ostream &os, const CameraIntrinsics &in);
 struct StreamIntrinsics {
   CameraIntrinsics left;
   CameraIntrinsics right;
+  CameraIntrinsics left_d;
   eYs3DPlyParameters ply_parameters;
 };
 
