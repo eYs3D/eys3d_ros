@@ -398,7 +398,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     //in.right.isRightCam = true;
 //e:New Camera Info    
     right_info_ptr = createCameraInfo(in.right);
-    depth_info_ptr = createCameraInfo(in.left);
+    depth_info_ptr = createCameraInfo(in.left_d);
     //--Calibration info
 
     // loop
@@ -745,7 +745,7 @@ StreamIntrinsics getCameraRectifyLog(
 //s:Add ZD Table Index Setting Function    
     // int index = getRectifyLogIndex(stream_mode);
     int index = params_.zd_tbl_index_;
-    // NODELET_INFO_STREAM("******Index: " << params_.zd_tbl_index_);    
+    NODELET_INFO_STREAM("ZD table Index: " << params_.zd_tbl_index_);    
 //e:Add ZD Table Index Setting Function
     auto calib = device_->getRectifyLogData(index);
     if (calib == nullptr || calib->InImgWidth == 0) {
@@ -760,21 +760,33 @@ StreamIntrinsics getCameraRectifyLog(
     in.left.fy = calib->CamMat1[4];
     in.left.cx = calib->CamMat1[2];
     in.left.cy = calib->CamMat1[5];
+    
+    in.left_d.width = params_.depth_width_;
+    in.left_d.height = params_.depth_height_;
+
+    in.left_d.fx = calib->CamMat1[0];
+    in.left_d.fy = calib->CamMat1[4];
+    in.left_d.cx = calib->CamMat1[2];
+    in.left_d.cy = calib->CamMat1[5];
     for (int i = 0; i < 5; i++) { //rectify color image no need,raw need
       if (params_.depth_data_type_ == 0 || params_.depth_data_type_ == 9)
       {
         in.left.coeffs[i] = calib->CamDist1[i];
+        in.left_d.coeffs[i] = calib->CamDist1[i];
       }
       else
       {
         in.left.coeffs[i] = 0;
+        in.left_d.coeffs[i] = 0;
       }
     }
     for (int i = 0; i < 12; i++) {
         in.left.p[i] = calib->NewCamMat1[i];
+        in.left_d.p[i] = calib->NewCamMat1[i];
     }
     for (int i = 0; i < 9; i++) {
         in.left.r[i] = calib->LRotaMat[i];
+        in.left_d.r[i] = calib->LRotaMat[i];
     }
     in.right.width = calib->OutImgWidth/2;
     in.right.height = calib->OutImgHeight;

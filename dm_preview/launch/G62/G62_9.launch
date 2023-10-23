@@ -37,6 +37,7 @@
      <arg name="depth_height" value="480" />
      <arg name="framerate" default="10" />
      <arg name="depth_type" default="$(arg depth_gray)" />
+     <arg name="zd_tbl_index" default="2" />
      <arg name="video_mode_type" default="$(arg raw_color_and_depth)" />
      <arg name="color_stream_format" value="$(arg stream_yuyv)" />
      <arg name="depth_maximum_mm" value="1000" />    

@@ -1,5 +1,5 @@
-1. L'+D     color_640x400__MJPEG  depth_640x480  30fps
-2. L'+D     color_320x200__MJPEG  depth_320x240  30fps
+1. L'+D     color_640x400__MJPEG  depth_640x400  30fps
+2. L'+D     color_320x200__MJPEG  depth_320x200  30fps
 3. L'+D     color_320x104__MJPEG  depth_320x104  30fps
 4. L'+R'+D  color_1280x400_MJPEG  depth_640x400  30fps
 5. L'+R'+D  color_640x200__MJPEG  depth_320x200  30fps
