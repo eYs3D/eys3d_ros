@@ -92,6 +92,11 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   std::string imu_frame_id;
   std::string imu_frame_processed_id;
 
+  int d_ir = 0;
+  bool d_pcolor = false;
+  bool d_pdepth = false;
+  bool d_pstream = false;
+
   enum ColorMode {
     Color_Left = 0,
     Color_Left_Right,
@@ -172,7 +177,62 @@ class DMPreviewNodelet : public nodelet::Nodelet {
 
   //s:Dynamic Reconfigure
   void paramConfigCallback(dm_preview::dm_previewConfig &config, uint32_t level) {
-    
+    if (config.ir_intensity != d_ir)
+    {
+      ROS_INFO("Dynamic Reconfigure : IR levle = %d", config.ir_intensity);
+      libeYs3D::devices::IRProperty property = device_->getIRProperty();
+      property.setIRValue(config.ir_intensity);
+      device_->setIRProperty(property);
+      d_ir = config.ir_intensity;
+    }
+
+    if (config.pause_stream != d_pstream)
+    {
+      if (config.pause_stream == true)
+      {
+        device_->pauseStream();
+        d_pstream = true;
+        ROS_INFO("Dynamic Reconfigure : Pause Stream");
+      }
+      else if (config.pause_stream == false)
+      {
+        device_->enableStream();
+        d_pstream = false;
+        ROS_INFO("Dynamic Reconfigure : Enable Stream");
+      }
+    }
+
+    if (config.pause_color != d_pcolor)
+    {
+      if (config.pause_color == true)
+      {
+        device_->pauseColorStream();
+        d_pcolor = true;
+        ROS_INFO("Dynamic Reconfigure : Pause Color");
+      }
+      else if (config.pause_color == false)
+      {
+        device_->enableColorStream();
+        d_pcolor = false;
+        ROS_INFO("Dynamic Reconfigure : Enable Color");
+      }
+    }
+
+    if (config.pause_depth != d_pdepth)
+    {
+      if (config.pause_depth == true)
+      {
+        device_->pauseDepthStream();
+        d_pdepth = true;
+        ROS_INFO("Dynamic Reconfigure : Pause Depth");
+      }
+      else if (config.pause_depth == false)
+      {
+        device_->enableDepthStream();
+        d_pdepth = false;
+        ROS_INFO("Dynamic Reconfigure : Enable Depth");
+      }
+    }
   }
 
   void receiveParamter(){
@@ -375,11 +435,6 @@ class DMPreviewNodelet : public nodelet::Nodelet {
       exit(signal);
     });
 
-    //s:Dynamic Reconfigure
-    boost::thread dynamic_reconfig_thread(&DMPreviewNodelet::receiveParamter,this);
-    NODELET_INFO_STREAM("Main Thread id : " << boost::this_thread::get_id());
-    //e:Dynamic Reconfigure
-
     getLanuchParams();
  
     // open device
@@ -400,6 +455,11 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     right_info_ptr = createCameraInfo(in.right);
     depth_info_ptr = createCameraInfo(in.left_d);
     //--Calibration info
+
+    //s:Dynamic Reconfigure
+    boost::thread dynamic_reconfig_thread(&DMPreviewNodelet::receiveParamter,this);
+    NODELET_INFO_STREAM("Main Thread id : " << boost::this_thread::get_id());
+    //e:Dynamic Reconfigure
 
     // loop
     ros::Rate loop_rate(params_.framerate_);
