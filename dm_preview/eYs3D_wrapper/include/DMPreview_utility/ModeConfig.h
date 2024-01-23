@@ -44,7 +44,9 @@ public:
         std::vector< int > vecDepthFps;
         //QString            csModeDesc;
 	std::string	   csModeDesc;
-
+        unsigned short videoModeD11OrColorOnly = 0xff; // v2 table added
+        unsigned short videoModeZ14 = 0xff;            // v2 table added
+        int rectifyFileIndex = 0xff;                   // v2 table added
         MODE_CONFIG() : eDecodeType_L( YUYV ), eDecodeType_K( YUYV ),  eDecodeType_T( YUYV ), iInterLeaveModeFPS( 0 ) {}
     };
     const std::vector< MODE_CONFIG >& GetModeConfigList( const int iPID );
@@ -70,7 +72,7 @@ private:
 
     sqlite3* m_sq3;
     std::map< int, PID_TABLE > m_mapDeviceTable;
-
+    bool IsSupportedColumnNumber(int counts);
     void ReadModeConfig(const char *path);
 };
 

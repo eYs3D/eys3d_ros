@@ -38,7 +38,7 @@ public:
 protected:
 
     virtual int getZDTableIndex();
-    
+    int enableInterleaveMode(bool enable) override;
     bool mSupportingInterleave;
 };
 
