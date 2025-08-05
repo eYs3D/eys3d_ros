@@ -651,6 +651,25 @@ int  APC_GetZDTable      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buff
 */
 int  APC_GetLogData      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index, CALIBRATION_LOG_TYPE type);
 
+/*! \fn int APC_GetLogData(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        int index)
+    \brief get log data from flash default all
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param BYTE *buffer buffer to store log data
+    \param int BufferLength input buffer length, must be 4096
+    \param int *pActualLength   actual length has written to buffer
+    \param int index    index to identify log data for corresponding depth
+    \param CALIBRATION_LOG_TYPE type    which calibration log to get
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_GetLogData_linux(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
 /*! \fn int APC_GetUserData(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
@@ -685,6 +704,24 @@ int  APC_GetUserData     (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buff
 */
 int  APC_SetYOffset      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
+/*! \fn int APC_SetYOffset_Advanced(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        int index)
+    \brief set Y offset values to G1 and G2 if is FP device
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param BYTE *buffer buffer data to set
+    \param int BufferLength buffer length
+    \param int *pActualLength   always return 256
+    \param int index    index value to file ID 30
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_SetYOffset_Advanced(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
 /*! \fn int APC_SetRectifyTable(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
@@ -702,6 +739,24 @@ int  APC_SetYOffset      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buff
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int  APC_SetRectifyTable (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
+/*! \fn int APC_SetRectifyTable_Advanced(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        int index)
+    \brief set rectify values to G1 and G2 if is FP device
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param BYTE *buffer rectify values to set
+    \param int BufferLength bufer length, must be 1024
+    \param int *pActualLength   always return 1024
+    \param int index    index(from 0 ~ 9) to identify rectify table for corresponding depth
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_SetRectifyTable_Advanced(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
 /*! \fn int APC_SetZDTable(
         void *pHandleEYSD,
@@ -721,6 +776,24 @@ int  APC_SetRectifyTable (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buff
 */
 int  APC_SetZDTable      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo);
 
+/*! \fn int APC_SetZDTable_Advanced(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        PZDTABLEINFO pZDTableInfo)
+    \brief set disparity and Z values to G1 and G2 if is FP device
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param BYTE *buffer ZD values to set
+    \param int BufferLength corresponding length of ZD table in buffer
+    \param int *pActualLength   buffer lenth written to flash, should be same as BufferLength
+    \param PZDTABLEINFO pZDTableInfo    index and depth type of this ZD
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_SetZDTable_Advanced(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo);
+
 /*! \fn int APC_SetLogData(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
@@ -738,6 +811,34 @@ int  APC_SetZDTable      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buff
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int  APC_SetLogData      (void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
+/*! \fn int APC_SetLogData_Advanced(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        int index)
+    \brief set log data to G1 and G2 if is FP device
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param BYTE *buffer log data to set
+    \param int BufferLength buffer length, must be 4096
+    \param int *pActualLength   always return 4096
+    \param int index    index to identify log data for corresponding depth
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_SetLogData_Advanced(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
+/*! \fn int APC_GetFlashProtectionSupported(
+void *pHandleEYSD,
+PDEVSELINFO pDevSelInfo)
+\brief check module support protected flash or not
+\param pHandleEYSD	 the pointer to the initilized EYSD SDK instance
+\param pDevSelInfo	pointer of device select index
+\return APC_OK: support FP, APC_NotSupport: not support FP
+*/
+int APC_GetFlashProtectionSupported(void *pHandleEYSD, PDEVSELINFO pDevSelInfo);
 
 /*! \fn int APC_SetUserData(
         void *pHandleEYSD,
@@ -842,6 +943,23 @@ int  APC_GetDeviceResolutionList(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
 */
 int  APC_Setup_v4l2_requestbuffers(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int cnt);
 
+/**
+ * @brief Porting the signature from Windows SDK. Open camera device with image callback support.
+ * @param void *pHandleEYSD the pointer to the initialized eYs3D SDK instance
+ * @param PDEVSELINFO pDevSelInfo pointer of device select index
+ * @param int colorStreamIndex index of the desired color stream
+ * @param int depthStreamIndex index of the desired depth stream
+ * @param int depthStreamSwitch depth switch currently unused.
+ * @param int nFPS indicate frame per second to the desired frame rate.
+ * @param APC_ImgCallbackFn callbackFn set image callback function
+ * @param void* pCallbackParameter the data to associate with the callback function
+ * @param pid Specify device product id currently unused.
+ * @return success: APC_OK, others:see eSPDI_ErrCode.h
+ */
+
+int APC_OpenDeviceCallback(void* pHandleEYSD, PDEVSELINFO pDevSelInfo,
+                           int colorStreamIndex, int depthStreamIndex, int depthStreamSwitch, int nFPS,
+                           APC_ImgCallbackFn callbackFn, void* pCallbackParameter, int pid);
 /*! \fn int APC_OpenDevice(
     void *pHandleEYSD,
     PDEVSELINFO pDevSelInfo,
@@ -905,11 +1023,11 @@ int  APC_OpenDevice(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
         3. start video capture processes
     \param void *pHandleEYSD	handle
     \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param int nEP0Width	width of endpoint1(color) resolution
-    \param int nEP0Height	height of endpoint1(color) resolution
+    \param int nEP0Width	width of endpoint1(color) resolution in eSP876 product. eSP936 color0, color1, mono width.
+    \param int nEP0Height	height of endpoint1(color) resolution in eSP876 product. eSP936 color0, color1, mono height.
     \param bool bEP0MJPG	endpoint1 output is MJPEG ?
-    \param int nEP1Width	width of endpoint2(depth) resolution
-    \param int nEP1Height	height of endpoint2(depth) resolution
+    \param int nEP1Width	width of endpoint2(depth) resolution. eSP936 keep zero.
+    \param int nEP1Height	height of endpoint2(depth) resolution. eSP936 keep zero.
     \param DEPTH_TRANSFER_CTRL dtc	depth image output transfer
         1. default is transferred to color(DEPTH_IMG_COLORFUL_TRANSFER)
             by calling from APC_OpenDevice()
@@ -1017,35 +1135,54 @@ int APC_CloseDeviceEx(void *pHandleEYSD, PDEVSELINFO pDevSelInfo);
         by issuing V4L2's IOCTL to get frame data
     \param void *pHandleEYSD	handle
     \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param BYTE *pBuf	buffer to store image data
+    \param BYTE *pBuf	buffer to store image data (ignored in USERPTR mode)
     \param unsigned long int *pImageSize	the actual buffer size getting from device
     \param int *pSerial	the serial number for synchronizing color and depth image
     \param int nDepthDataType	the depth data type, see definition in eSPDI_def.h
+    \param unsigned char **pUserBuf	[USERPTR mode] Returns pointer to user-provided buffer containing image data
+
     \return success: APC_OK, others: see eSPDI_def.h
+
+    \note USERPTR Mode Buffer Management:
+    - When device is opened with IMAGE_USERPTR_MODE, the pUserBuf parameter receives the buffer pointer
+    - The returned buffer pointer in pUserBuf must be recycled using APC_RecycleBuffer() after processing
+    - Application is responsible for timely buffer recycling to maintain continuous frame capture
+    - Each successful APC_GetImage call in USERPTR mode requires a corresponding APC_RecycleBuffer call
 */
 int  APC_GetImage(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
                         BYTE *pBuf, unsigned long int *pImageSize,
-                        int *pSerial = 0, int nDepthDataType =0);
+                        int *pSerial = 0, int nDepthDataType = 0,
+                        unsigned char **pUserBuf = nullptr);
 
 /*! \fn int APC_GetColorImage(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
         BYTE *pBuf,
         unsigned long int *pImageSize,
-        int *pSerial, int nDepthDataType)
+        int *pSerial, int nDepthDataType,
+        unsigned char **pUserBuf)
     \brief get color image
         by issuing V4L2's IOCTL to get frame data
     \param void *pHandleEYSD	handle
     \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param BYTE *pBuf	buffer to store image data
+    \param BYTE *pBuf	buffer to store image data (ignored in USERPTR mode)
     \param unsigned long int *pImageSize	the actual buffer size getting from device
     \param int *pSerial	the serial number for synchronizing color and depth image
     \param int nDepthDataType reserved, no used.
+    \param unsigned char **pUserBuf	[USERPTR mode] Returns pointer to user-provided buffer containing color data
+
     \return success: APC_OK, others: see eSPDI_def.h
+
+    \note USERPTR Mode Buffer Management:
+    - When device is opened with IMAGE_USERPTR_MODE, the pUserBuf parameter receives the buffer pointer
+    - The returned buffer pointer in pUserBuf must be recycled using APC_RecycleBuffer() after processing
+    - Application is responsible for timely buffer recycling to maintain continuous frame capture
+    - Each successful APC_GetColorImage call in USERPTR mode requires a corresponding APC_RecycleBuffer call
 */
 int  APC_GetColorImage(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
                         BYTE *pBuf, unsigned long int *pImageSize,
-                        int *pSerial = 0, int nDepthDataType =0);
+                        int *pSerial = 0, int nDepthDataType = 0,
+                        unsigned char **pUserBuf = nullptr);
 
 
 /*! \fn int APC_GetColorImageWithTimestamp(
@@ -1083,20 +1220,30 @@ int APC_GetColorImageWithTimestamp(
         PDEVSELINFO pDevSelInfo,
         BYTE *pBuf,
         unsigned long int *pImageSize,
-        int *pSerial, int nDepthDataType)
+        int *pSerial, int nDepthDataType,
+        unsigned char **pUserBuf)
     \brief get depth image
         by issuing V4L2's IOCTL to get frame data
     \param void *pHandleEYSD	handle
     \param PDEVSELINFO pDevSelInfo	pointer of device select index
-    \param BYTE *pBuf	buffer to store image data
+    \param BYTE *pBuf	buffer to store image data (ignored in USERPTR mode)
     \param unsigned long int *pImageSize	the actual buffer size getting from device
     \param int *pSerial	the serial number for synchronizing color and depth image
     \param int nDepthDataType	the depth data type, see definition in eSPDI_def.h
+    \param unsigned char **pUserBuf	[USERPTR mode] Returns pointer to user-provided buffer containing depth data
+
     \return success: APC_OK, others: see eSPDI_def.h
+    
+    \note USERPTR Mode Buffer Management:
+    - When device is opened with IMAGE_USERPTR_MODE, the pUserBuf parameter receives the buffer pointer
+    - The returned buffer pointer in pUserBuf must be recycled using APC_RecycleDepthBuffer() after processing
+    - Application is responsible for timely buffer recycling to maintain continuous frame capture
+    - Each successful APC_GetDepthImage call in USERPTR mode requires a corresponding APC_RecycleDepthBuffer call
 */
 int  APC_GetDepthImage(void *pHandleEYSD, PDEVSELINFO pDevSelInfo,
                         BYTE *pBuf, unsigned long int *pImageSize,
-                        int *pSerial = 0, int nDepthDataType =0);
+                        int *pSerial = 0, int nDepthDataType = 0,
+                        unsigned char **pUserBuf = nullptr);
 
 /*! \fn int APC_GetDepthImageWithTimestamp(
         void *pHandleEYSD,
@@ -1639,6 +1786,44 @@ int  APC_SetGPIOCtrl(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nGPIOIndex,
 */
 int  APC_GetCTPropVal(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nId, long int *pValue);
 
+/*! \fn int APC_PropertyCT_GetCurrent(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        long nProperty,
+        long *pCur,
+        long *pCur2,
+        long *pCapsFlag,
+        int pid)
+    \brief get camera terminal(CT) property value for cv, windows type api
+        By v4l2_control to get control value of camera terminal
+
+        this enumeration contained the following properties:
+        V4L2_CID_EXPOSURE_AUTO;
+        V4L2_CID_EXPOSURE_AUTO_PRIORITY
+        V4L2_CID_EXPOSURE_ABSOLUTE
+        V4L2_CID_EXPOSURE
+        V4L2_CID_FOCUS_ABSOLUTE
+        V4L2_CID_FOCUS_RELATIVE
+        V4L2_CID_FOCUS_AUTO
+        V4L2_CID_IRIS_ABSOLUTE
+        V4L2_CID_IRIS_RELATIVE
+        V4L2_CID_ZOOM_ABSOLUTE
+        V4L2_CID_ZOOM_RELATIVE
+        V4L2_CID_PAN_ABSOLUTE
+        V4L2_CID_PAN_RELATIVE
+        V4L2_CID_TILT_ABSOLUTE
+        V4L2_CID_TILT_RELATIVE
+        V4L2_CID_PRIVACY
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param long nProperty  specifies the member of the property set,
+        see windows CT Property ID defined in eSPDI_def.h
+    \param long *pCur  pointer of store CT property value
+    \param int pid set device pid, slave system not create yet.
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_PropertyCT_GetCurrent(void *pHandleEYSD, DEVSELINFO *pDevSelInfo, long nProperty, long *pCur, long *pCur2, long *pCapsFlag, int pid);
+
 /*! \fn int APC_SetCTPropVal(
         void *pHandleEYSD,
         PDEVSELINFO pDevSelInfo,
@@ -1654,6 +1839,26 @@ int  APC_GetCTPropVal(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nId, long 
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int  APC_SetCTPropVal(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nId, long int nValue);
+
+/*! \fn int APC_PropertyCT_SetCurrent(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        long nProperty,
+        long pCur,
+        long pCur2,
+        long pCapsFlag,
+        int pid)
+    \brief set camera terminal property values for cv, windows type api
+        By v4l2_control to set
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param long nProperty  specifies the member of the property set
+        see windows CT Property ID defined in eSPDI_def.h
+    \param long pCur  CT property value to set
+    \param int pid set device pid, slave system not create yet.
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int  APC_PropertyCT_SetCurrent(void *pHandleEYSD, DEVSELINFO *pDevSelInfo, long nProperty, long pCur, long pCur2, long pCapsFlag, int pid);
 
 /*! \fn int APC_GetPUPropVal(
         void *pHandleEYSD,
@@ -1778,6 +1983,45 @@ int  APC_GetCTRangeAndStep(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nId, 
     \return success: APC_OK, others: see eSPDI_def.h
 */
 int  APC_GetPURangeAndStep(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nId, int *pMax, int *pMin, int *pStep, int *pDefault, int *pFlags);
+
+/*! \fn int APC_PropertyCT_GetRange(
+    void *pHandleEYSD, DEVSELINFO *pDevSelInfo, long nProperty, long *pMax, long *pMin, long *pStep, long *pDefault, long *pFlags, int pid)
+    \brief get processing unit property value for cv, windows type api
+        By v4l2_queryctrl to get property values of processing unit(PU)
+        this enumeration contained the following properties:
+        V4L2_CID_BACKLIGHT_COMPENSATION
+        V4L2_CID_BRIGHTNESS
+        V4L2_CID_CONTRAST
+        V4L2_CID_GAIN
+        V4L2_CID_POWER_LINE_FREQUENCY
+        V4L2_CID_HUE
+        V4L2_CID_HUE_AUTO
+        V4L2_CID_SATURATION
+        V4L2_CID_SHARPNESS
+        V4L2_CID_GAMMA
+        V4L2_CID_WHITE_BALANCE_TEMPERATURE
+        V4L2_CID_AUTO_WHITE_BALANCE
+    \param void *pHandleEYSD    handle
+    \param PDEVSELINFO pDevSelInfo  pointer of device select index
+    \param long nProperty  nProperty specifies the member of the property set,
+        see windows CT Property ID defined in eSPDI_def.h
+    \param long int *pMax   maximum value, inclusive.
+        This field gives an upper bound for the control
+    \param long int *pMin   minimum value, inclusive.
+        This field gives a lower bound for the control
+    \param long int *pStep  This field gives a step size for the control
+        see enum https://www.linuxtv.org/downloads/v4l-dvb-apis-old/vidioc-queryctrl.html
+        how the step value is to be used for each possible control type. Note that this an unsigned 32-bit value
+    \param long int *pDefault   The default value of a V4L2_CTRL_TYPE_INTEGER, _BOOLEAN, _BITMASK,
+        _MENU or _INTEGER_MENU control. Not valid for other types of controls.
+        Note that drivers reset controls to their default value only when the driver is first loaded, never afterwards.
+    \param long int *pFlags control flags,
+        see https://www.linuxtv.org/downloads/v4l-dvb-apis-old/vidioc-queryctrl.html
+    \param int pid set device pid, slave system not create yet.
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+
+int APC_PropertyCT_GetRange(void *pHandleEYSD, DEVSELINFO *pDevSelInfo, long nProperty, long *pMax, long *pMin, long *pStep, long *pDefault, long *pFlags, int pid);
 
 int APC_GetCTPUSupportList(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, unsigned char CtPuId, unsigned short int *pValue);
 
@@ -2449,6 +2693,196 @@ int APC_EncryptMP4(void* pHandleEYSD, PDEVSELINFO pDevSelInfo, const char* filen
     \return success: APC_OK, others:see eSPDI_def.h
 */
 int APC_DecryptMP4(void* pHandleEYSD, PDEVSELINFO pDevSelInfo, const char* filename);
+
+/*!
+    \brief Register user-provided buffers for zero-copy image capture (USERPTR mode only)
+
+    This function registers a list of user-allocated buffers with the V4L2 driver for zero-copy 
+    operation in USERPTR mode. The buffers will be used for color/general image capture, allowing 
+    the application to control memory allocation and achieve optimal performance by eliminating 
+    data copying between driver and application space.
+
+    \param [in] pHandleEYSD SDK handle returned by APC_Init()
+    \param [in] pDevSelInfo Device selection info
+    \param [in] bufferList Array of pointers to user-allocated buffers
+    \param [in] bufferSizes Array of buffer sizes corresponding to each buffer in bufferList
+    \param [in] bufferCount Number of buffers to register (must be > 0)
+
+    \return
+    - APC_OK: Buffers registered successfully and capture started
+    - APC_NullPtr: Invalid parameters (null pointers or bufferCount <= 0)
+    - APC_NoDevice: Device not available or not initialized
+    - APC_RET_BAD_PARAM: Device not opened in USERPTR mode
+    - APC_NotSupport: MIPI cameras do not support USERPTR mode
+    - APC_OPEN_DEVICE_FAIL: V4L2 buffer registration or capture start failed
+
+    \note Prerequisites and Behavior:
+    - Device must be opened with IMAGE_USERPTR_MODE before calling this function
+    - Function automatically starts capture after successful buffer registration
+    - Not supported on MIPI cameras - use standard MMAP mode instead
+    - Buffers must remain valid until APC_UnregisterUserBuffers() is called
+    - Each buffer in bufferList must be properly aligned and sized for image data
+
+    \warning BUFFER ALLOCATION REQUIREMENTS (NEW VALIDATION):
+    - **Page Alignment Required**: All buffers must be aligned to system page boundaries (typically 4KB)
+                                   Use posix_memalign() or aligned_alloc() to ensure proper alignment
+    - **Minimum Buffer Size**: Buffer size must be >= width × height × bytes_per_pixel for the image format
+                               YUV formats: width × height × 2, MJPEG: width × height × 2.
+    - **Memory Accessibility**: All buffer memory must be accessible (not protected/unmapped pages)
+    - **Validation Performed**: Function performs comprehensive validation and will fail with APC_RET_BAD_PARAM
+                                if requirements not met.
+    
+    \warning CRITICAL BUFFER MANAGEMENT:
+    - Application is responsible for buffer memory allocation and lifecycle management
+    - Registered buffers become part of V4L2 driver queue and will be used for capture
+    - Use APC_GetImage() or APC_GetColorImage() to receive captured frames
+    - Each received buffer must be recycled using APC_RecycleBuffer() for continuous operation
+    - Buffers remain registered until explicitly unregistered or device is closed
+
+    \see APC_RegisterUserDepthBuffers for depth-specific buffer registration
+    \see APC_UnregisterUserBuffers to unregister buffers
+*/
+int APC_RegisterUserBuffers(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, void **bufferList, size_t *bufferSizes,
+                            int bufferCount);
+
+/*!
+    \brief Register user-provided buffers for zero-copy depth image capture (USERPTR mode only)
+
+    This function registers a list of user-allocated buffers with the V4L2 driver for zero-copy 
+    depth image capture in USERPTR mode. This function is specifically designed for depth 
+    pipeline buffer management and operates on the depth endpoint (EP1) of the device, allowing 
+    dedicated depth buffer control separate from color image buffers.
+
+    \param [in] pHandleEYSD SDK handle returned by APC_Init()
+    \param [in] pDevSelInfo Device selection info
+    \param [in] bufferList Array of pointers to user-allocated depth buffers
+    \param [in] bufferSizes Array of buffer sizes corresponding to each depth buffer in bufferList
+    \param [in] bufferCount Number of depth buffers to register (must be > 0)
+
+    \return
+    - APC_OK: Depth buffers registered successfully and capture started
+    - APC_NullPtr: Invalid parameters (null pointers, invalid device, or bufferCount <= 0)
+    - APC_NoDevice: Device not available or not initialized
+    - APC_RET_BAD_PARAM: Device not opened in USERPTR mode
+    - APC_NotSupport: MIPI cameras do not support USERPTR mode
+    - APC_OPEN_DEVICE_FAIL: V4L2 buffer registration or capture start failed
+
+    \note Prerequisites and Behavior:
+    - Device must be opened with IMAGE_USERPTR_MODE before calling this function
+    - Function operates on depth endpoint (EP1) - separate from color image pipeline
+    - Function automatically starts depth capture after successful buffer registration
+    - Not supported on MIPI cameras - use standard MMAP mode instead
+    - Depth buffers must remain valid until unregistered or device is closed
+    - Each buffer must be properly sized for depth data format (typically 16-bit per pixel)
+
+    \note DEPTH BUFFER ALLOCATION REQUIREMENTS:
+    To ensure compatibility and prevent system crashes, user-allocated depth buffers must meet:
+
+    **Buffer Allocation Requirements:**
+    - **Page Alignment**: All depth buffers must be aligned to system page boundaries (typically 4KB
+                          use sysconf(_SC_PAGESIZE) checking current system page size)
+    - **Minimum Size**: Each buffer must be at least depth_width × depth_height × 2 bytes (16-bit depth data)
+    - **Memory Accessibility**: All buffer memory must be accessible (not protected/unmapped pages)
+    - **Validation Performed**: Function performs comprehensive validation and will fail with APC_RET_BAD_PARAM
+                                if requirements not met.
+
+    **Example Depth Buffer Allocation:**
+    @code
+    // Get system page size for alignment
+    size_t page_size = sysconf(_SC_PAGESIZE);
+
+    // Calculate required depth buffer size (16-bit depth data)
+    size_t buffer_size = depth_width * depth_height * 2;
+
+    // Round up to page boundary
+    size_t aligned_size = ((buffer_size + page_size - 1) / page_size) * page_size;
+
+    // Allocate page-aligned depth buffer
+    void *depth_buffer = aligned_alloc(page_size, aligned_size);
+    @endcode
+
+    \warning DEPTH BUFFER MANAGEMENT:
+    - Application is responsible for depth buffer memory allocation and lifecycle management
+    - Registered buffers become part of depth V4L2 driver queue and will be used for depth capture
+    - Use APC_GetDepthImage() to receive captured depth frames
+    - Each received depth buffer must be recycled using APC_RecycleDepthBuffer() for continuous operation
+    - Depth buffers remain registered until explicitly unregistered or device is closed
+    - This function manages depth-specific buffers separately from color buffers
+
+    \see APC_GetDepthImage for capturing depth frames
+    \see APC_RecycleDepthBuffer for depth buffer recycling
+*/
+int APC_RegisterUserDepthBuffers(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, void **bufferList, size_t *bufferSizes,
+                                 int bufferCount);
+
+/*!
+    \brief Recycle a user buffer back to V4L2 driver for next capture (USERPTR mode only)
+
+    This function returns a user buffer to the V4L2 driver's queue after the application
+    has finished processing the image data. This enables zero-copy operation by allowing
+    the user to control when buffers are available for reuse by the driver.
+
+    \param [in] pHandleEYSD SDK handle returned by APC_Init()
+    \param [in] pDevSelInfo Device selection info
+    \param [in] bufferPtr Pointer to the user buffer to recycle (same pointer used in APC_Get*Image)
+
+    \return
+    - APC_OK: Buffer recycled successfully
+    - APC_NullPtr: Invalid parameters
+    - APC_NoDevice: Device not available
+    - APC_RET_BAD_PARAM: Buffer not found or device not in USERPTR mode
+    - APC_DEVICE_TIMEOUT: V4L2 operation failed
+
+    \note
+    - Only works when device is opened with IMAGE_USERPTR_MODE
+    - The bufferPtr must be the same pointer passed to APC_Get*Image functions
+
+    \warning BUFFER LIFECYCLE MANAGEMENT:
+    - User application is responsible for calling this function after processing each captured frame
+    - Each buffer obtained from APC_Get*Image functions requires a corresponding APC_RecycleBuffer call
+    - Timely recycling ensures continuous frame capture and optimal system performance
+    - The application controls buffer availability - prompt recycling enables efficient streaming
+    - Best practice: Call APC_RecycleBuffer immediately after frame processing is complete
+    - Buffer ownership: Application owns the buffer until it calls APC_RecycleBuffer to return it
+*/
+int APC_RecycleBuffer(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, void *bufferPtr);
+
+/*!
+    \brief Recycle a user depth buffer back to V4L2 driver for next capture (USERPTR mode only)
+
+    This function returns a user depth buffer to the V4L2 driver's queue after the application
+    has finished processing the depth image data. This function is specifically designed for 
+    depth buffer management in USERPTR mode and provides the same zero-copy operation capabilities 
+    as APC_RecycleBuffer but is dedicated to depth image processing workflows.
+
+    \param [in] pHandleEYSD SDK handle returned by APC_Init()
+    \param [in] pDevSelInfo Device selection info
+    \param [in] bufferPtr Pointer to the user depth buffer to recycle (same pointer used in APC_GetDepthImage)
+
+    \return
+    - APC_OK: Depth buffer recycled successfully
+    - APC_NullPtr: Invalid parameters
+    - APC_NoDevice: Device not available
+    - APC_RET_BAD_PARAM: Buffer not found or device not in USERPTR mode
+    - APC_DEVICE_TIMEOUT: V4L2 operation failed
+
+    \note
+    - Only works when device is opened with IMAGE_USERPTR_MODE
+    - The bufferPtr must be the same pointer returned by APC_GetDepthImage pUserBuf parameter
+    - This function is functionally equivalent to APC_RecycleBuffer but provides semantic clarity for depth workflows
+
+    \warning BUFFER LIFECYCLE MANAGEMENT:
+    - User application is responsible for calling this function after processing each captured depth frame
+    - Each buffer obtained from APC_GetDepthImage requires a corresponding APC_RecycleDepthBuffer call
+    - Timely recycling ensures continuous depth frame capture and optimal system performance
+    - The application controls depth buffer availability - prompt recycling enables efficient depth streaming
+    - Best practice: Call APC_RecycleDepthBuffer immediately after depth frame processing is complete
+    - Buffer ownership: Application owns the depth buffer until it calls APC_RecycleDepthBuffer to return it
+
+    \see APC_RecycleBuffer for color/general buffer recycling
+*/
+int APC_RecycleDepthBuffer(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, void *bufferPtr);
+
 } // end of extern "C" 01
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
@@ -3107,5 +3541,55 @@ int APC_GetSimpleDevSelectIndex(void *pHandleEYSD, int index);
 */
 int APC_GetCompositeDevSelectIndex(void *pHandleEYSD, int index);
 
+/*! \fn int APC_GetDeviceInfoEx(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, DEVINFORMATIONEX* pDevInfoEx)
+    \brief Get informations of EYSD UVC devices, see DEVINFORMATIONEX.
+    \param void *pHandleEYSD handle
+    \param PDEVSELINFO pDevSelInfo pointer of device select index.
+    \param DEVINFORMATIONEX* pDevInfoEx	pointer of device information.
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_GetDeviceInfoEx(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, DEVINFORMATIONEX* pDevInfoEx);
 
+/**
+ * @fn APC_IsBPX4bitsClear
+ * @param pHandleEYSD device handle
+ * @param pDevSelInfo pointer of device select index.
+ * @return return if it cleared return APC_OK , APC_WRITE_REG_FAIL if cannot
+ */
+int APC_IsBPX4bitsClear(void *pHandleEYSD, PDEVSELINFO pDevSelInfo);
+
+/**
+ * @fn APC_UnprotectFlash
+ * @param pHandleEYSD
+ * @param pDevSelInfo
+ * @return Supported firmware: If unlocked or successfully unlocked return APC_OK. Failed return APC_WRITE_REG_FAIL.
+ * Not support firmware: APC_OK.
+ * Other: No device APC_NoDevice. Null pointer APC_Init_Fail. APC_DEVICE_BUSY if imu is testing.
+ */
+int APC_UnprotectFlash(void *pHandleEYSD, PDEVSELINFO pDevSelInfo);
+
+typedef struct {
+    uint8_t protocolVersion;
+    uint8_t payloadSize;
+    union {
+        uint8_t payload[256];
+    };
+} APC_META_DATA;
+
+typedef void (*APC_MetaDataCallbackFn) (APC_META_DATA metaData);
+
+/**
+ * @fn APC_EnableMetaDataEvent
+ * @param pHandleEYSD: Initialized handler returned by APC_Init API.
+ * @param pDevSelInfo: Pointer to the device select information.
+ * @param enableEvent: Set to true to enable the metadata event, false to disable it.
+ * @param callbackFunction: Callback function to be invoked after image metadata is ready. It contains APC_META_DATA as
+ * the callback function's parameter. If the data received with payloadSize is zero, it means error happens, and one
+ * meta data event will be dropped.
+ * @return return APC_OK when successful operation. APC_ILLEGAL_STEP if already open before.
+ * APC_RET_BAD_PARAM is from registering VIDIOC_SUBSCRIBE_EVENT failed. APC_NullPtr might be null handle or callback.
+ * Other return value: Check eSPDI_def.h
+ */
+int APC_SetMetaDataEventState(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, bool enableEvent,
+                              APC_MetaDataCallbackFn callbackFunction = nullptr);
 #endif // LIB_ESPDI_H
