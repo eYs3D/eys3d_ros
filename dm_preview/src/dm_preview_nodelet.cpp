@@ -649,7 +649,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           params_.framerate_,
           (libeYs3D::video::DEPTH_RAW_DATA_TYPE)params_.depth_data_type_,
           params_.depth_width_, params_.depth_height_,
-          DEPTH_IMG_COLORFUL_TRANSFER, IMAGE_SN_SYNC, params_.zd_tbl_index_,
+          DEPTH_IMG_NON_TRANSFER, IMAGE_SN_SYNC, params_.zd_tbl_index_,
           std::bind(&DMPreviewNodelet::color_image_callback, this,
                     std::placeholders::_1),
           std::bind(&DMPreviewNodelet::depth_image_callback, this,
