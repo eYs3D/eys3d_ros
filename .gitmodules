@@ -1,0 +1,3 @@
+[submodule "dm_preview/eYs3D_wrapper"]
+	path = dm_preview/eYs3D_wrapper
+	url = git@github.com:eYs3D/eys3d_wrapper_prebuilt_linux.git
