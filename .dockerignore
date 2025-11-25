@@ -1,0 +1,16 @@
+# Docker ignore file for ROS workspace
+build/
+devel/
+install/
+.catkin_workspace
+*.pyc
+__pycache__/
+.git/
+.gitignore
+*.bag
+logs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
