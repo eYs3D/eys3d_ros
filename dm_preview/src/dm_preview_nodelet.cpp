@@ -253,57 +253,43 @@ class DMPreviewNodelet : public nodelet::Nodelet {
   //e:Dynamic Reconfigure
 
   bool color_image_callback(const libeYs3D::video::Frame *frame) {
-      
+
       if (0 == pub_left_color.getNumSubscribers()) return true;
 
       auto timestamp = compatibleTimestamp(frame->serialNumber);
 
-      sensor_msgs::CameraInfoPtr info;
-//s:Split L/R Image
-      std_msgs::Header headerLeft, headerRight;
+      std_msgs::Header headerLeft;
       headerLeft.stamp = timestamp;
-      headerRight.stamp = timestamp;
       headerLeft.frame_id = left_color_frame_id;
-      headerRight.frame_id = right_color_frame_id;
-      cv::Mat croppedLeftImg, croppedRightImg;
-      bool bLeftOut = false, bRightOut = false;      
-//e:Split L/R Image      
 
-      cv::Mat mat =
-          cv::Mat(frame->height, frame->width, CV_8UC3, (void *)frame->rgbVec.data());
+      cv::Mat mat = cv::Mat(frame->height, frame->width, CV_8UC3, (void *)frame->rgbVec.data());
 
-//s:Split L/R Image
-      if (params_.color_mode_ == 1) //color_Left = 0, color_Left_Right = 1
-      {
-        bLeftOut = true;
-        bRightOut = true;
-        mat(cv::Rect(0, 0, frame->width/2, frame->height)).copyTo(croppedLeftImg);
-        mat(cv::Rect(frame->width/2, 0, frame->width/2, frame->height)).copyTo(croppedRightImg);       
-      }
-      else
-      {
-        bLeftOut = true;
-        bRightOut = false;
-        mat(cv::Rect(0, 0, frame->width, frame->height)).copyTo(croppedLeftImg);
-      }
+      if (params_.color_mode_ == 1) { // color_Left_Right: split L+R side-by-side image
+          std_msgs::Header headerRight;
+          headerRight.stamp = timestamp;
+          headerRight.frame_id = right_color_frame_id;
 
-      auto &&msgLeft = cv_bridge::CvImage(headerLeft, enc::BGR8, croppedLeftImg).toImageMsg();
-      auto &&msgRight = cv_bridge::CvImage(headerRight, enc::BGR8, croppedRightImg).toImageMsg();
+          cv::Mat croppedLeftImg, croppedRightImg;
+          mat(cv::Rect(0, 0, frame->width/2, frame->height)).copyTo(croppedLeftImg);
+          mat(cv::Rect(frame->width/2, 0, frame->width/2, frame->height)).copyTo(croppedRightImg);
 
-      if(bLeftOut)
-      {
+          auto &&msgLeft = cv_bridge::CvImage(headerLeft, enc::BGR8, croppedLeftImg).toImageMsg();
+          auto &&msgRight = cv_bridge::CvImage(headerRight, enc::BGR8, croppedRightImg).toImageMsg();
+
+          left_info_ptr->header.stamp = msgLeft->header.stamp;
+          left_info_ptr->header.frame_id = left_color_frame_id;
+          pub_left_color.publish(msgLeft, left_info_ptr);
+
+          right_info_ptr->header.stamp = msgRight->header.stamp;
+          right_info_ptr->header.frame_id = right_color_frame_id;
+          pub_right_color.publish(msgRight, right_info_ptr);
+      } else { // color_Left: left image only, no need to copy
+          auto &&msgLeft = cv_bridge::CvImage(headerLeft, enc::BGR8, mat).toImageMsg();
+
           left_info_ptr->header.stamp = msgLeft->header.stamp;
           left_info_ptr->header.frame_id = left_color_frame_id;
           pub_left_color.publish(msgLeft, left_info_ptr);
       }
-
-      if(bRightOut)  
-      {
-          right_info_ptr->header.stamp = msgRight->header.stamp;
-          right_info_ptr->header.frame_id = right_color_frame_id;
-          pub_right_color.publish(msgRight, right_info_ptr);
-      }
- //e:Split L/R Image
 
       return true;
   }
@@ -320,24 +306,26 @@ class DMPreviewNodelet : public nodelet::Nodelet {
 
       header.frame_id = left_color_frame_id;
 
-      cv::Mat mat = cv::Mat(frame->height, frame->width, CV_8UC3,
-                            (void *)frame->rgbVec.data());
-      auto &&msg = cv_bridge::CvImage(header, enc::RGB8, mat).toImageMsg();
+      cv::Mat mat;
+      sensor_msgs::ImagePtr msg;
 
-      switch (params_.depth_type_){
-        case DepthType::Depth_Raw: {
+      switch (params_.depth_type_) {
+        case DepthType::Depth_Raw:
             mat = cv::Mat(frame->height, frame->width, CV_16UC1,
-                            (void *)frame->dataVec.data());
+                          (void *)frame->dataVec.data());
             msg = cv_bridge::CvImage(header, enc::MONO16, mat).toImageMsg();
             break;
-        }
-        case DepthType::Depth_Gray: {
+        case DepthType::Depth_Gray:
             mat = cv::Mat(frame->height, frame->width, CV_16UC1,
-                            (void *)frame->zdDepthVec.data());
-            mat.setTo(0,mat > params_.z_maximum_mm_);
+                          (void *)frame->zdDepthVec.data());
+            mat.setTo(0, mat > params_.z_maximum_mm_);
             msg = cv_bridge::CvImage(header, enc::TYPE_16UC1, mat).toImageMsg();
             break;
-        }
+        default: // Depth_Colorful
+            mat = cv::Mat(frame->height, frame->width, CV_8UC3,
+                          (void *)frame->rgbVec.data());
+            msg = cv_bridge::CvImage(header, enc::RGB8, mat).toImageMsg();
+            break;
       }
 
        //if(depth_info_ptr)
@@ -665,7 +653,7 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           params_.framerate_,
           (libeYs3D::video::DEPTH_RAW_DATA_TYPE)params_.depth_data_type_,
           params_.depth_width_, params_.depth_height_,
-          DEPTH_IMG_NON_TRANSFER, IMAGE_SN_SYNC, params_.zd_tbl_index_,
+          DEPTH_IMG_COLORFUL_TRANSFER, IMAGE_SN_SYNC, params_.zd_tbl_index_,
           std::bind(&DMPreviewNodelet::color_image_callback, this,
                     std::placeholders::_1),
           std::bind(&DMPreviewNodelet::depth_image_callback, this,
