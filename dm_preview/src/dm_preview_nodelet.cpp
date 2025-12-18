@@ -436,10 +436,16 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     });
 
     getLanuchParams();
- 
-    // open device
-    openDevice();
+
+    // Phase 1: Initialize device and stream configuration
+    // This must happen BEFORE getCameraIntrinsics() because:
+    // - getCameraIntrinsics() needs device_ handle
+    // - getRectifyLogData() needs initStream() to populate mCameraRectifyLogData
+    initDevice();
+
     //++Calibration info
+    // Get camera intrinsics and create camera info pointers
+    // This must happen AFTER initDevice() (which calls initStream) but BEFORE startStream()
     bool in_ok;
     StreamMode mStreamMode = getStreamModeIndex();
     auto&& in = getCameraIntrinsics(mStreamMode, &in_ok);
@@ -455,6 +461,9 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     right_info_ptr = createCameraInfo(in.right);
     depth_info_ptr = createCameraInfo(in.left_d);
     //--Calibration info
+
+    // Phase 2: Enable stream - callbacks can now safely access camera info pointers
+    startStream();
 
     //s:Dynamic Reconfigure
     boost::thread dynamic_reconfig_thread(&DMPreviewNodelet::receiveParamter,this);
@@ -570,7 +579,12 @@ class DMPreviewNodelet : public nodelet::Nodelet {
     return timestamp;
   }
 
-  void openDevice() {
+  // Phase 1: Initialize device and stream configuration
+  // Called BEFORE getCameraIntrinsics() because:
+  // - getCameraIntrinsics() needs device_ handle
+  // - getRectifyLogData() needs initStream() to populate mCameraRectifyLogData
+  //   (CameraDevice constructor initializes mCameraRectifyLogData to {nullptr, nullptr})
+  void initDevice() {
 
       eYs3DSystem_ = std::make_shared<libeYs3D::EYS3DSystem>(libeYs3D::EYS3DSystem::COLOR_BYTE_ORDER::COLOR_RGB24);
 
@@ -607,11 +621,6 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           exit(-1);
       }
 
-      libeYs3D::video::COLOR_RAW_DATA_TYPE color_type = 
-          Color_YUYV == params_.color_stream_format_ ?
-          libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_YUY2 :
-          libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_MJPG;
-
       device_->enableExtendIR(true);
       libeYs3D::devices::IRProperty property = device_->getIRProperty();
       property.setIRValue(params_.ir_intensity_);
@@ -643,7 +652,14 @@ class DMPreviewNodelet : public nodelet::Nodelet {
         processOptions.enableColorPostProcess(false);
         processOptions.setColorResizeFactor(0.5);    //  resolution * factor = resized resolution
         device_->setPostProcessOptions(processOptions);
-  
+
+      // Initialize stream - this populates mCameraRectifyLogData needed by getRectifyLogData()
+      // Note: initStream() registers callbacks but does NOT start them
+      libeYs3D::video::COLOR_RAW_DATA_TYPE color_type =
+          Color_YUYV == params_.color_stream_format_ ?
+          libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_YUY2 :
+          libeYs3D::video::COLOR_RAW_DATA_TYPE::COLOR_RAW_DATA_MJPG;
+
       int ret = device_->initStream(
           color_type, params_.color_width_, params_.color_height_,
           params_.framerate_,
@@ -659,18 +675,23 @@ class DMPreviewNodelet : public nodelet::Nodelet {
           std::bind(&DMPreviewNodelet::imu_data_callback, this,
                     std::placeholders::_1));
 
-    bool isSupportInterLeaveMode = device_->isInterleaveModeSupported();
-    device_->enableInterleaveMode(true);
-    device_->enableInterleaveMode(false);
-    NODELET_INFO_STREAM("isInterleaveModeSupported : " << isSupportInterLeaveMode);
-    if (isSupportInterLeaveMode) {
-        ret = device_->enableInterleaveMode(params_.interleave_mode_);
-        if ( ret == APC_OK ) {
-            NODELET_INFO_STREAM("is InterLeave Mode enabled: " << device_->isInterleaveModeEnabled());
-        } else {
-            NODELET_INFO_STREAM("enable Interleave Mode failure reason : " << ret);
-        }
-    }
+      bool isSupportInterLeaveMode = device_->isInterleaveModeSupported();
+      device_->enableInterleaveMode(true);
+      device_->enableInterleaveMode(false);
+      NODELET_INFO_STREAM("isInterleaveModeSupported : " << isSupportInterLeaveMode);
+      if (isSupportInterLeaveMode) {
+          ret = device_->enableInterleaveMode(params_.interleave_mode_);
+          if (ret == APC_OK) {
+              NODELET_INFO_STREAM("is InterLeave Mode enabled: " << device_->isInterleaveModeEnabled());
+          } else {
+              NODELET_INFO_STREAM("enable Interleave Mode failure reason : " << ret);
+          }
+      }
+  }
+
+  // Phase 2: Enable stream - start the callbacks
+  // Called AFTER camera info pointers are initialized so callbacks can safely access them
+  void startStream() {
       device_->enableStream();
       
       uint16_t z_near, z_far;
