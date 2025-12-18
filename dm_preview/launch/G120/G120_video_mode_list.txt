@@ -1,0 +1,24 @@
+1.  L'+D     color_1280x720_YUYV   depth_1280x720  60fps          interleave
+2.  L'+D     color_1280x720_YUYV   depth_1280x720  60fps          non-interleave
+3.  L'+D     color_1280x720_YUYV   depth_1280x720  30fps          interleave
+4.  L'+D     color_1280x720_YUYV   depth_1280x720  30fps          non-interleave
+5.  L'+D     color_1280x720_YUYV   depth_1280x720  20fps          interleave
+6.  L'+D     color_1280x720_YUYV   depth_1280x720  10fps          non-interleave
+7.  L'+R'+D  color_2560x720_YUYV   depth_1280x720  10fps          non-interleave
+8.  D        color_0x0             depth_1280x720  60fps          depth only
+9.  D        color_0x0             depth_1280x720  30fps          depth only
+10. D        color_0x0             depth_1280x720  15fps          depth only
+11. D        color_0x0             depth_1280x720  10fps          depth only
+12. L'+R'    color_2560x720_MJPEG  depth_0x0       60fps          color only
+13. L'+R'    color_2560x720_YUYV   depth_0x0       30fps          color only
+14. L'+R'    color_2560x720_YUYV   depth_0x0       15fps          color only
+15. L'+R'    color_2560x720_YUYV   depth_0x0       10fps          color only
+16. L'+D     color_1280x720_MJPEG  depth_1280x720  10fps          USB2.0
+17. D        color_0x0             depth_1280x720  10fps          USB2.0, depth only
+18. L'+R'    color_2560x720_MJPEG  depth_0x0       2fps           USB2.0, color only
+19. L+R      color_2560x720_YUYV   depth_0x0       30fps          raw color (no rectify)
+20. L+R      color_3200x896_YUYV   depth_0x0       15fps          raw color (no rectify)
+
+' = Rectify image
+interleave = half fps, color without IR dot
+USB2.0 = USB 2.0 compatible mode
