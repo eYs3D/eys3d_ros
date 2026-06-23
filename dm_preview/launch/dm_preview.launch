@@ -1,5 +1,21 @@
-<launch>  
-  <!-- Depth output -->
+<launch>
+  <!--
+    Depth output type - determines the depth data source and format:
+
+    depth_raw (0): Raw depth data from dataVec
+      - D11 mode: outputs disparity values (pixel displacement between L/R cameras)
+      - Z14 mode: outputs distance in millimeters directly
+
+    depth_gray (1): Processed depth data from zdDepthVec (16-bit grayscale)
+      - D11 mode: disparity is converted to distance using stereo formula Z = (F * B) / D
+        where F=focal length, B=baseline, D=disparity
+      - Z14 mode: zdDepthVec is empty (image appears all black) - this is normal!
+        Use depth_raw instead, as Z14 already outputs distance in mm directly via dataVec
+
+    depth_colorful (2): Colorized depth visualization from rgbVec
+      - Requires DEPTH_IMG_COLORFUL_TRANSFER flag enabled in CameraDevice::initStream
+      - Produces a color-mapped depth image for visualization
+  -->
   <arg name="depth_raw"         default="0" />
   <arg name="depth_gray"        default="1" />
   <arg name="depth_colorful"    default="2" />
