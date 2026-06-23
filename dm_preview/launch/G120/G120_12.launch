@@ -28,7 +28,7 @@
     <arg name="depth_height" value="0" />
     <arg name="framerate" default="60" />
     <arg name="depth_type" default="$(arg depth_gray)" />
-    <arg name="video_mode_type" default="24" />
+    <arg name="video_mode_type" default="72" />
     <arg name="interleave_mode" default="false" />
     <arg name="zd_tbl_index" default="0" />
     <arg name="color_stream_format" value="$(arg stream_mjpg)" />
