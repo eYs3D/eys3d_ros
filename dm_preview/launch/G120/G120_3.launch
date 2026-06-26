@@ -28,9 +28,9 @@
     <arg name="depth_height" value="720" />
     <arg name="framerate" default="30" />
     <arg name="depth_type" default="$(arg depth_gray)" />
-    <arg name="video_mode_type" default="26" />
+    <arg name="video_mode_type" default="74" />
     <arg name="interleave_mode" default="true" />
-    <arg name="zd_tbl_index" default="0" />
+    <arg name="zd_tbl_index" default="3" />
     <arg name="color_stream_format" value="$(arg stream_yuyv)" />
     <arg name="depth_maximum_mm" value="1500" />
     <arg name="ir_intensity" default="3" />
